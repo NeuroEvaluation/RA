@@ -1,0 +1,768 @@
+<!doctype html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#2a1550">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Neuro Eval">
+<title>แบบประเมินแพทย์ประจำบ้าน ประสาทวิทยา</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 240 240'><defs><linearGradient id='g' x1='0' y1='0' x2='1' y2='1'><stop offset='0' stop-color='%238b5cf6'/><stop offset='1' stop-color='%233b1a78'/></linearGradient><radialGradient id='h' cx='.3' cy='.22' r='.8'><stop offset='0' stop-color='%23fff' stop-opacity='.3'/><stop offset='.6' stop-color='%23fff' stop-opacity='0'/></radialGradient></defs><rect width='240' height='240' rx='56' fill='url(%23g)'/><rect width='240' height='240' rx='56' fill='url(%23h)'/><g transform='translate(6 12) scale(1.12)' fill='none' stroke='%23fff' stroke-width='5.6' stroke-linecap='round' stroke-linejoin='round'><path fill='%23fff' fill-opacity='.14' d='M40 95C22 88 18 62 32 46C40 30 60 20 80 22C92 12 118 10 134 18C152 18 170 30 174 48C186 58 186 80 176 92C172 104 160 110 148 108C142 116 128 120 116 116C106 122 90 122 82 114C70 118 56 114 52 104C46 104 42 100 40 95Z'/><path d='M146 108C160 112 170 122 164 132C156 140 138 138 130 128C126 122 130 115 138 112'/><path d='M58 99C76 90 96 86 118 84C128 82 136 86 141 93'/><path d='M112 21C106 33 114 44 106 56C100 66 106 74 102 84'/><path d='M36 64C48 60 52 50 64 47M48 80C60 76 70 82 80 71C88 62 84 52 92 43M68 29C74 39 86 37 92 30M84 56C92 62 96 72 92 80'/><path d='M128 29C126 43 138 46 134 58C130 70 140 75 150 70M156 39C150 50 160 56 168 62M120 70C126 74 128 66 138 66'/><path d='M164 82C156 86 158 96 149 99'/><path d='M76 106C88 101 98 109 110 103C118 99 126 105 134 101'/><path d='M139 121C147 119 155 121 162 125M135 129C145 129 153 131 160 133'/></g><path d='M28 198H88L98 180L110 214L122 188L130 198H212' fill='none' stroke='%235eead4' stroke-width='7' stroke-linecap='round' stroke-linejoin='round'/></svg>">
+<link rel="apple-touch-icon" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAALQAAAC0CAIAAACyr5FlAAAEUUlEQVR4nOza3WtTZwDH8eecnCTtVu3q4qawVdwco4yWhcEKY7MrCIPtevcK6pVee+e9t1ovRZReqPgCtV6qiYoW8aK+oSIISrG+Qm1M0ryc8/ikCUlt/fkH9Hw/5OXhnOcuX57nnCRBLpczwKcE7jkyMmKAj+Xz+aA5Gh8f//zUgYGBwcHBVCplEButOKw1f45s+3r9t5+aY29cuzw9PV0sFoeHh9PptEE8tOOwxYq182EYrZiRsJWaHRoa6utbd+nS5dHRv7u6ugxiwG++WRtV67ZUte8XolRgftoY9GcSbuwe5YUoDK2bs2XLj9nsr5OTk6VSySAGWitHFNnINtaPDV/5G/saB9NJL7s5de9ZxXURhuGNRe6453knT57asWO7wWrX2Vbc66b1ybXd3tLTUWTq9Xp2eHTr6LZkwoVhKuXShYnTBjHQXjkiF8iTF9VqPVw2w/e8gttcatb3TML3/DBqTEYMdFaOaPERRnbZDBdLLWwdDBJ+2rPNZQarXmflsIvXHDb63Advfduzds2uXTsNYmBpHNZtF80dw3US2tp8bdY3QU+QCfzWdxvdSe+HbxIG8dDZVuxiIu7GpFB79Wj+4s3Xx/xk4+K0N/Fdtu//zT1/bMqs+/n7boPYaH3P0Vg5GpekZrb8cOrt0Vtzx5tlOO/CmatvxordF5tlFAqFsbHDBjGw9FbWvq48vvvu3JPilWWTdv+2b2v/v25QqprHs3UuSGOivXLY99W5e3Pnn5amls3Y/9fhZhk3Z64fvH6gcVMTEUcstFeOaOrliRn/fmirS08f+uds5osNbnDm4ZHTD46sSWauPA/aSWF1a8VRLpf921/2m9/bJ3p7e/fu3dMcT0ycf3DnxS/mPzcueQv8MBsTXi6X488+WKnzZx9gJeKARByQiAMScUAiDkjEAYk4IBEHJOKARByQiAMScUAiDkjEAYk4IBEHJOKARByQiAMScUAiDkjEAYk4IBEHJOKARByQiAMScUAiDkjEAYk4IBEHJOKARByQiAMScUAiDkjEAYk4IBEHJOKARByQiAMScUAiDkjEAYk4IBEHJOKARByQiAMScUAiDkjEAYk4IBEHJOKARByQiAMScUAiDkjEAYk4IBEHJOKARByQiAMScUAiDkjEAYk4IBEHJOKARByQiAMScUAiDkjEAYk4IBEHJOKARByQiAMScUAiDkjEAYk4IBEHJOKARByQiAMScUAiDkjEAYk4IBEHJOKARByQiAMScUAiDkjEAYk4IBEHJOKARByQiAMScUAiDkjEAYk4IBEHJOKARByQiAMScUAiDkjEAYk4IBEHJOKARByQiAMScUAiDkjEAYk4IBEHJOKARByQiAMScUAiDkjEAYk4IBEHJOKARByQiAMScUAiDkjEAYk4IBEHJOKARByQiAMScUAiDkjEAYk4IBEHJOKARByQiAMScUAiDkjEAYk4IDXiyOfzBljhAwAAAP//sFByIgAAAAZJREFUAwBmuTers6PcegAAAABJRU5ErkJggg==">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Anuphan:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#f3f1f7; --paper:#ffffff; --paper2:#f6f3fb; --ink:#231b33; --muted:#6c6480; --rule:#e5e0ee;
+  --pen:#5b2fa0; --pen-soft:#eee7f9; --head:#2a1550; --on-head:#f5f0fd; --on-pen:#ffffff;
+  --bad:#c4472b; --bad-bg:#fbe6e0; --mid:#b07d0a; --mid-bg:#f8eed2; --good:#13896f; --good-bg:#dcf2ec;
+  --gen:#13896f; --stroke:#5b2fa0; --hh:64px;
+  color-scheme:light;
+}
+@media (prefers-color-scheme:dark){:root{
+  --bg:#141019; --paper:#1d1726; --paper2:#251e30; --ink:#ede7f6; --muted:#a69db8; --rule:#342b44;
+  --pen:#b697f2; --pen-soft:#2d2242; --head:#1b0f30; --on-head:#efe8fb; --on-pen:#160c27;
+  --bad:#f08a6f; --bad-bg:#3b1f19; --mid:#e8bb52; --mid-bg:#352a10; --good:#4fd1ae; --good-bg:#12302a;
+  --gen:#4fd1ae; --stroke:#b697f2;
+  color-scheme:dark;
+}}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--bg);color:var(--ink);font:400 16px/1.55 'Anuphan',system-ui,-apple-system,'Segoe UI',Tahoma,sans-serif}
+button,input,select,textarea{font:inherit;color:inherit}
+button{cursor:pointer;-webkit-tap-highlight-color:transparent}
+:focus-visible{outline:2px solid var(--pen);outline-offset:2px}
+.wrap{max-width:760px;margin:0 auto;padding:0 16px}
+
+/* ── header: แถบม่วงพร้อมเส้นคลื่นสมอง ── */
+header.top{position:sticky;top:0;z-index:20;background:var(--head);color:var(--on-head);padding-top:env(safe-area-inset-top,0px);overflow:hidden}
+header.top .wrap{position:relative;display:flex;align-items:center;gap:12px;height:var(--hh)}
+header.top .eeg{position:absolute;right:-10px;top:0;height:100%;width:260px;opacity:.28;pointer-events:none}
+header.top h1{position:relative;font-size:17px;font-weight:600;margin:0;flex:1;line-height:1.2;letter-spacing:.1px}
+header.top h1 small{display:block;font-weight:400;opacity:.7;font-size:12.5px;margin-top:2px}
+.net{position:relative;display:flex;align-items:center;gap:6px;font-size:12px;background:rgba(255,255,255,.1);border:0;color:inherit;padding:5px 10px;border-radius:999px}
+.net i{width:8px;height:8px;border-radius:50%;background:#a39cb3;display:inline-block}
+.net.ok i{background:#5be3b4;box-shadow:0 0 0 3px rgba(91,227,180,.2)}.net.bad i{background:#ff7a66}.net.wait i{background:#f5cf55}
+
+/* ── แถบเมนูล่าง ── */
+nav.bottom{position:fixed;left:0;right:0;bottom:0;z-index:20;background:var(--paper);border-top:1px solid var(--rule);padding-bottom:env(safe-area-inset-bottom,0px)}
+nav.bottom .wrap{display:flex}
+nav.bottom button{flex:1;background:none;border:0;padding:8px 2px 9px;display:flex;flex-direction:column;align-items:center;gap:2px;font-size:11.5px;color:var(--muted)}
+nav.bottom svg{width:24px;height:24px;stroke:currentColor;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+nav.bottom button.on{color:var(--pen);font-weight:600}
+nav.bottom button.on svg{background:var(--pen-soft);border-radius:999px;padding:2px 14px;width:54px;height:28px}
+
+main{padding:18px 0 calc(110px + env(safe-area-inset-bottom,0px))}
+.sheet{background:var(--paper);border-radius:18px;margin-bottom:14px;overflow:hidden}
+.sheet>h2{margin:0;padding:16px 16px 6px;font-size:16px;font-weight:600}
+.sheet>h2 span{font-weight:400;color:var(--muted);font-size:13px;margin-left:4px}
+.pad{padding:12px 16px 16px}
+.muted{color:var(--muted)}
+.small{font-size:13px}
+.row{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.grow{flex:1}
+label.f{display:block;font-size:13px;color:var(--muted);margin:12px 0 5px}
+input.t,select.t,textarea.t{width:100%;padding:11px 14px;border:1.5px solid var(--rule);border-radius:12px;background:var(--paper2);font-size:16px}
+input.t:focus,select.t:focus,textarea.t:focus{border-color:var(--pen);outline:none;background:var(--paper)}
+textarea.t{min-height:110px;resize:vertical}
+.btn{border:1.5px solid var(--rule);background:var(--paper);border-radius:12px;padding:9px 15px;font-size:14px;font-weight:500}
+.btn.pri{background:var(--pen);border-color:var(--pen);color:var(--on-pen);font-weight:600}
+.btn.ghost{background:none;border-color:transparent;color:var(--pen)}
+.btn.danger{color:var(--bad)}
+.btn:disabled{opacity:.5;cursor:default}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.chip{border:1.5px solid var(--rule);background:var(--paper);border-radius:999px;padding:7px 14px;font-size:14px}
+.chip.on{border-color:var(--pen);background:var(--pen);color:var(--on-pen);font-weight:600}
+.svc{display:inline-block;font-size:11.5px;font-weight:600;padding:1px 9px;border-radius:999px;color:#fff}
+.svc.STROKE{background:var(--stroke)}.svc.GEN{background:var(--gen)}
+@media (prefers-color-scheme:dark){.svc{color:#160c27}}
+.banner{background:var(--mid-bg);color:var(--mid);border-radius:14px;padding:11px 14px;margin-bottom:14px;display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+
+/* ── login ── */
+.login{min-height:100dvh;background:var(--head);color:var(--on-head);display:flex;flex-direction:column;align-items:center;justify-content:center;padding:calc(env(safe-area-inset-top,0px) + 20px) 20px calc(env(safe-area-inset-bottom,0px) + 20px);text-align:center;position:relative;overflow:hidden}
+.login .eeg{width:min(420px,100%);height:70px;margin-bottom:8px}
+.login .eeg.anim path{stroke-dasharray:900;stroke-dashoffset:900;animation:trace 1.6s ease-out .2s forwards}
+@keyframes trace{to{stroke-dashoffset:0}}
+@media (prefers-reduced-motion:reduce){.login .eeg.anim path{animation:none;stroke-dashoffset:0}}
+.login h1{font-size:24px;line-height:1.3;margin:4px 0 4px;font-weight:600}
+.login .en{opacity:.65;font-size:14px;margin:0 0 28px}
+.dots{display:flex;gap:14px;justify-content:center;margin-bottom:8px}
+.dots span{width:14px;height:14px;border-radius:50%;background:rgba(255,255,255,.18);transition:transform .15s}
+.dots span.f{background:#c9b2f7;transform:scale(1.15)}
+.err{color:#ffb4a4;min-height:24px;font-size:14px;margin:6px 0 14px}
+.keypad{display:grid;grid-template-columns:repeat(3,78px);gap:14px;justify-content:center}
+.keypad button{height:78px;border-radius:50%;border:0;background:rgba(255,255,255,.08);color:var(--on-head);font-size:28px;font-weight:300}
+.keypad button.x{background:none;font-size:15px;opacity:.75}
+.keypad button:active{background:rgba(255,255,255,.22)}
+.apibox{margin-top:24px;width:100%;max-width:380px;text-align:left}
+.apibox summary{opacity:.7;font-size:13px;cursor:pointer;text-align:center}
+.apibox label.f{color:var(--on-head);opacity:.7}
+.apibox input.t{background:rgba(255,255,255,.08);border-color:rgba(255,255,255,.18);color:var(--on-head)}
+
+/* ── รายชื่อ ── */
+.res{display:flex;gap:14px;align-items:center;padding:14px 16px;border:0;border-top:1px solid var(--rule);background:none;width:100%;text-align:left}
+.sheet .res:first-child{border-top:0}
+.av{flex:none;width:46px;height:46px;border-radius:14px;display:grid;place-items:center;font-size:20px;font-weight:600;color:#fff}
+.av.STROKE{background:var(--stroke)}.av.GEN{background:var(--gen)}
+@media (prefers-color-scheme:dark){.av{color:#160c27}}
+.res .nm{font-weight:600;font-size:16px}
+.res .meta{font-size:13px;color:var(--muted);display:flex;gap:6px;align-items:center;flex-wrap:wrap;margin-top:2px}
+.res .go{width:34px;height:34px;border-radius:50%;background:var(--pen-soft);color:var(--pen);display:grid;place-items:center;font-size:18px;flex:none}
+.tag{font-size:11px;padding:1px 8px;border-radius:999px;background:var(--good-bg);color:var(--good);font-weight:600}
+.tag.d{background:var(--mid-bg);color:var(--mid)}
+
+/* ── แบบประเมิน ── */
+.who{background:var(--paper);border-radius:18px;padding:16px;margin-bottom:12px}
+.who .nm{font-size:21px;font-weight:600;line-height:1.25}
+.steps{display:flex;gap:6px;overflow-x:auto;scrollbar-width:none;padding:10px 16px;margin:0 -16px 6px;position:sticky;top:calc(env(safe-area-inset-top,0px) + var(--hh));background:var(--bg);z-index:10}
+.step{display:flex;align-items:center;gap:7px;border:0;background:var(--paper);border-radius:999px;padding:5px 13px 5px 5px;white-space:nowrap;font-size:13px;color:var(--muted)}
+.step span{width:24px;height:24px;border-radius:50%;background:var(--paper2);display:grid;place-items:center;font-size:12px;font-weight:700}
+.step.done span{background:var(--good);color:#fff}
+.step.on{background:var(--pen);color:var(--on-pen);font-weight:600}
+.step.on span{background:rgba(255,255,255,.25);color:inherit}
+.sechead{padding:4px 2px 10px}
+.sechead h2{margin:0;font-size:22px;font-weight:600;line-height:1.25}
+.sechead p{margin:0;color:var(--muted);font-size:14px}
+.item{background:var(--paper);border-radius:18px;padding:14px 14px 12px;margin-bottom:10px;border:2px solid transparent}
+.item.miss{border-color:var(--bad)}
+.q{display:flex;gap:10px;align-items:flex-start;margin-bottom:12px}
+.qn{flex:none;width:26px;height:26px;border-radius:8px;background:var(--pen-soft);color:var(--pen);font-size:13px;font-weight:700;display:grid;place-items:center;margin-top:1px}
+.q .tx{flex:1;font-size:15.5px;font-weight:500;line-height:1.4}
+.q .tx small{display:block;color:var(--muted);font-size:12.5px;font-weight:400}
+.val{flex:none;min-width:58px;text-align:right;font-size:26px;font-weight:700;line-height:1;color:var(--rule)}
+.val small{display:block;font-size:11px;font-weight:500;margin-top:3px}
+.val.b1{color:var(--bad)}.val.b2{color:var(--mid)}.val.b3{color:var(--good)}.val.na{color:var(--muted);font-size:18px}
+/* เกจคะแนน 1–9 แบ่ง 3 ช่วง */
+.gauge,.gl{display:grid;grid-template-columns:repeat(3,1fr) 6px repeat(3,1fr) 6px repeat(3,1fr);column-gap:3px}
+.seg{height:40px;border:0;background:var(--paper2);font-size:14px;color:var(--muted);padding:0;transition:background .12s}
+.seg:nth-child(4){grid-column:5}.seg:nth-child(7){grid-column:9}
+.seg:nth-child(3n+1){border-radius:12px 4px 4px 12px}.seg:nth-child(3n){border-radius:4px 12px 12px 4px}
+.seg.f{color:#fff}
+.seg.f.b1{background:var(--bad)}.seg.f.b2{background:var(--mid)}.seg.f.b3{background:var(--good)}
+@media (prefers-color-scheme:dark){.seg.f{color:#160c27}}
+.seg.cur{font-weight:700;font-size:16px;box-shadow:inset 0 0 0 2px rgba(255,255,255,.55)}
+.gfoot{display:flex;align-items:center;gap:10px;margin-top:6px}
+.gl{flex:1;font-size:11px;color:var(--muted);text-align:center}
+.gl .l1{grid-column:1/4}.gl .l2{grid-column:5/8}.gl .l3{grid-column:9/12}
+.na{border:1.5px solid var(--rule);background:none;border-radius:999px;padding:2px 12px;font-size:12px;color:var(--muted)}
+.na.on{background:var(--ink);border-color:var(--ink);color:var(--bg);font-weight:600}
+.sumrow{display:flex;align-items:center;gap:12px;padding:10px 16px;border-top:1px solid var(--rule)}
+.sumrow:first-of-type{border-top:0}
+.sumrow b{font-size:20px;min-width:44px;text-align:right}
+
+.bar{position:fixed;left:0;right:0;bottom:0;z-index:15;background:var(--paper);border-top:1px solid var(--rule);padding:10px 0 calc(10px + env(safe-area-inset-bottom,0px))}
+.bar .wrap{display:flex;gap:10px;align-items:center}
+.prog{flex:1;font-size:12.5px;color:var(--muted);min-width:0}
+.prog div{height:6px;background:var(--paper2);border-radius:3px;margin-top:5px;overflow:hidden}
+.prog div i{display:block;height:100%;background:var(--pen);border-radius:3px;transition:width .25s}
+
+/* ── ผลประเมิน ── */
+table.r{width:100%;border-collapse:collapse;font-size:14px}
+table.r th,table.r td{padding:8px 12px;border-top:1px solid var(--rule);text-align:left;vertical-align:top}
+table.r th{font-weight:500;color:var(--muted);font-size:12px}
+table.r td.n{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
+.scroll{overflow-x:auto}
+.sc{font-weight:700}
+.sc.b1{color:var(--bad)}.sc.b2{color:var(--mid)}.sc.b3{color:var(--good)}
+.meter{height:8px;background:var(--paper2);border-radius:4px;min-width:80px;overflow:hidden;margin-top:6px}
+.meter i{display:block;height:100%;border-radius:4px}
+details.ev{border-top:1px solid var(--rule)}
+details.ev summary{padding:12px 16px;cursor:pointer;display:flex;gap:10px;align-items:baseline;list-style:none}
+details.ev summary::-webkit-details-marker{display:none}
+details.ev .body{padding:0 16px 16px}
+
+.toast{position:fixed;left:50%;bottom:calc(92px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:var(--ink);color:var(--bg);padding:11px 18px;border-radius:14px;font-size:14px;z-index:50;max-width:90vw;box-shadow:0 8px 28px rgba(30,10,60,.3)}
+.empty{padding:32px 16px;text-align:center;color:var(--muted)}
+.kv{display:grid;grid-template-columns:auto 1fr;gap:6px 14px;font-size:14px}
+.kv dt{color:var(--muted)}.kv dd{margin:0}
+
+/* ── โลโก้และสมองโปร่งใส ── */
+.logo{display:block;flex:none}
+.login .logo{width:96px;height:96px;margin-bottom:16px;filter:drop-shadow(0 12px 28px rgba(10,0,30,.45))}
+.login .logo.anim .pulse{stroke-dasharray:260;stroke-dashoffset:260;animation:trace 1.4s ease-out .3s forwards}
+@media (prefers-reduced-motion:reduce){.login .logo.anim .pulse{animation:none;stroke-dashoffset:0}}
+.bgbrain{position:absolute;left:50%;top:40%;width:min(118vw,680px);transform:translate(-50%,-50%) rotate(-6deg);color:#c9b2f7;opacity:.17;pointer-events:none}
+.login>*:not(.bgbrain){position:relative;z-index:1}
+header.top .logo{width:36px;height:36px;position:relative}
+</style>
+</head>
+<body>
+<div id="app"></div>
+<script>
+/* ═══════════ ตั้งค่า: ใส่ URL ของ Apps Script Web app (ลงท้าย /exec) ═══════════ */
+const DEFAULT_API = 'https://script.google.com/macros/s/AKfycbwfVKN4V2FKyznqtTQ7bXguWIPUXnRDPcwXv6MtvbsnyJnGtOFnqeHK0xigTYfDkPPcOg/exec';
+const VERSION = '1.3.0';
+
+/* ═══════════ แบบประเมิน (ตามแบบฟอร์มกระดาษ) ═══════════ */
+const SECTIONS = [
+  { key:'avgClinical', th:'ทักษะทางคลินิก', en:'Clinical skills', items:[
+    ['c1','การรวบรวมข้อมูลและการแปลผล','Data gathering and interpretation'],
+    ['c2','ทักษะการตรวจร่างกายทางประสาทวิทยา','Neurological examination skills'],
+    ['c3','การตัดสินใจทางคลินิก','Clinical judgment'],
+    ['c4','ทักษะการบริหารจัดการและองค์กร','Organizational skills']]},
+  { key:'avgKnowledge', th:'ความรู้ทางการแพทย์', en:'Medical knowledge', items:[
+    ['k1','การแสวงหาความรู้และหลักฐานเชิงประจักษ์','Evidence of educated/self-study'],
+    ['k2','ความรู้เรื่องโรคและการวินิจฉัยแยกโรค','Pathophysiology/differential diagnosis'],
+    ['k3','ความรู้ด้านการรักษาและยาทางระบบประสาท','Therapeutic management'],
+    ['k4','การแปลผลตรวจพิเศษ (CT/MRI brain, EEG, EMG/NCS)','Investigation interpretation']]},
+  { key:'avgAccount', th:'ความรับผิดชอบและภาระงาน', en:'Accountability & responsibilities', items:[
+    ['a1','ความน่าเชื่อถือและความเชื่อมั่นในตนเอง','Reliability and self-decisiveness'],
+    ['a2','ความกระตือรือร้นและริเริ่มสร้างสรรค์','Initiative'],
+    ['a3','การรักษาเวลาและตรงต่อเวลา','Punctuality/timeliness'],
+    ['a4','ความถูกต้องและรวดเร็วในการบันทึกเวชระเบียน','Accurate and timely completion of records'],
+    ['a5','การสอนและการให้คำแนะนำแก่ผู้ป่วย','Teaching and patient education']]},
+  { key:'avgProf', th:'จริยธรรมและวิชาชีพ', en:'Professionalism', items:[
+    ['p1','ความซื่อสัตย์สุจริต','Honesty/integrity'],
+    ['p2','ความเห็นอกเห็นใจและจรรยาบรรณ','Empathy and ethics'],
+    ['p3','ความสม่ำเสมอในการปฏิบัติงาน','Consistency']]},
+  { key:'avgInter', th:'ทักษะระหว่างบุคคล', en:'Interpersonal skills', items:[
+    ['i1','ทักษะการสื่อสารด้วยวาจา','Verbal communication skills'],
+    ['i2','การทำงานร่วมกับผู้อื่นและทีมสุขภาพ','Teamwork'],
+    ['i3','การควบคุมอารมณ์ภายใต้ความกดดัน','Reaction to stress']]}
+];
+const ITEMS = SECTIONS.flatMap(s => s.items);
+const LABEL = Object.fromEntries(ITEMS.map(i => [i[0], i[1]]));
+const ROLES = ['อาจารย์','แพทย์ประจำบ้านในแผนก','แพทย์ประจำบ้านนอกแผนก','ผู้ร่วมงาน'];
+
+/* ═══════════ storage ในเครื่อง (ร่าง/คิว/โทเคน) ═══════════ */
+const LS = {
+  get(k, d){ try{ const v = localStorage.getItem('ra_'+k); return v == null ? d : JSON.parse(v); }catch(e){ return d; } },
+  set(k, v){ try{ localStorage.setItem('ra_'+k, JSON.stringify(v)); }catch(e){} },
+  del(k){ try{ localStorage.removeItem('ra_'+k); }catch(e){} }
+};
+
+const S = {
+  api: LS.get('api', DEFAULT_API), token: LS.get('token', null), role: LS.get('role', null),
+  tab: 'eval', sec: 0, residents: [], evals: null, status: null, current: null,
+  filter: '', resFilter: '', editing: null, net: 'wait', lastPing: 0, pin: '', busy: false
+};
+const app = document.getElementById('app');
+
+/* ═══════════ utils ═══════════ */
+const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const sleep = ms => new Promise(r => setTimeout(r, ms));
+const uid = () => (crypto.randomUUID ? crypto.randomUUID() : Date.now().toString(36) + Math.random().toString(36).slice(2));
+const band = n => n < 4 ? 1 : n < 7 ? 2 : 3;
+const bandName = n => ['','ต้องปรับปรุง','พอใช้','ดีเยี่ยม'][band(n)];
+const today = () => new Date().toISOString().slice(0,10);
+function thDate(iso){
+  if(!iso) return '-';
+  const d = new Date(String(iso).slice(0,10) + 'T00:00:00');
+  return isNaN(d) ? esc(iso) : d.toLocaleDateString('th-TH', {day:'numeric', month:'short', year:'numeric'});
+}
+function thDateTime(iso){
+  if(!iso) return '-';
+  const d = new Date(String(iso).replace(' ', 'T'));
+  return isNaN(d) ? esc(iso) : d.toLocaleString('th-TH', {day:'numeric', month:'short', year:'2-digit', hour:'2-digit', minute:'2-digit'});
+}
+const period = r => `${thDate(r.start)} – ${thDate(r.end)}`;
+function toast(msg, ms = 2800){
+  document.querySelector('.toast')?.remove();
+  const t = document.createElement('div'); t.className = 'toast'; t.setAttribute('role','status'); t.textContent = msg;
+  document.body.appendChild(t); setTimeout(() => t.remove(), ms);
+}
+const apiReady = () => S.api && /^https:\/\/script\.google(usercontent)?\.com\//.test(S.api) && !S.api.includes('XXXX');
+
+/* ═══════════ เชื่อมต่อเซิร์ฟเวอร์ (มี retry + timeout) ═══════════ */
+async function api(action, data = {}, { retries = 2, timeout = 25000 } = {}){
+  if (!apiReady()) throw Object.assign(new Error('ยังไม่ได้ใส่ URL ของ Apps Script'), { server:true });
+  for (let i = 0; i <= retries; i++){
+    const ctl = new AbortController(); const tm = setTimeout(() => ctl.abort(), timeout);
+    let text;
+    try {
+      // text/plain = ไม่มี CORS preflight → ใช้ได้บนมือถือ/LINE browser
+      const r = await fetch(S.api, { method:'POST', redirect:'follow', cache:'no-store', signal:ctl.signal,
+        headers:{ 'Content-Type':'text/plain;charset=utf-8' },
+        body: JSON.stringify(Object.assign({ action, token:S.token }, data)) });
+      text = await r.text();
+    } catch(e){
+      clearTimeout(tm); setNet('bad');
+      if (i < retries) { await sleep(1000 * Math.pow(3, i)); continue; }
+      throw new Error('เชื่อมต่อเซิร์ฟเวอร์ไม่ได้ ตรวจสอบอินเทอร์เน็ตแล้วลองใหม่');
+    }
+    clearTimeout(tm);
+    let j;
+    try { j = JSON.parse(text); }
+    catch(e){ setNet('bad'); throw Object.assign(new Error('เซิร์ฟเวอร์ไม่ได้ตอบเป็น JSON — ตรวจว่า Deploy แบบ “Anyone” และใช้ URL ที่ลงท้าย /exec'), { server:true }); }
+    setNet('ok'); S.lastPing = Date.now();
+    if (!j.ok){
+      if (j.error === 'AUTH'){ logout(true); throw Object.assign(new Error('หมดเวลาเข้าระบบ กรุณาใส่รหัสใหม่'), { server:true }); }
+      throw Object.assign(new Error(j.error || 'เกิดข้อผิดพลาด'), { server:true });
+    }
+    return j;
+  }
+}
+
+function setNet(s){ S.net = s; const el = document.querySelector('.net'); if (el) el.className = 'net ' + s; }
+
+/* ═══════════ กันหลับ: ping ทุก 5 นาที + ปลุกทันทีเมื่อกลับมาที่แอป ═══════════ */
+async function heartbeat(force){
+  if (!apiReady()) return;
+  if (!force && Date.now() - S.lastPing < 20000) return;
+  try {
+    setNet('wait');
+    const j = await api('ping', {}, { retries:1, timeout:15000 });
+    if (S.token && !j.role){ logout(true); toast('หมดเวลาเข้าระบบ กรุณาใส่รหัสใหม่'); return; }
+    await flushQueue();
+  } catch(e){ /* สถานะจะแสดงเป็นจุดแดง */ }
+}
+setInterval(() => heartbeat(true), 5 * 60 * 1000);
+document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'visible'){ heartbeat(); keepScreen(); } });
+window.addEventListener('online', () => heartbeat(true));
+window.addEventListener('offline', () => setNet('bad'));
+window.addEventListener('pageshow', e => { if (e.persisted) heartbeat(true); });
+
+// ไม่ให้หน้าจอดับระหว่างกรอกแบบประเมิน (Screen Wake Lock)
+let wake = null;
+async function keepScreen(){
+  if (!LS.get('wake', true) || !S.current || !('wakeLock' in navigator) || document.visibilityState !== 'visible') return;
+  try { wake = await navigator.wakeLock.request('screen'); } catch(e){}
+}
+function releaseScreen(){ try { wake && wake.release(); } catch(e){} wake = null; }
+
+/* ═══════════ คิวออฟไลน์: ส่งไม่ได้ → เก็บไว้ ส่งใหม่อัตโนมัติ ═══════════ */
+const getQueue = () => LS.get('queue', []);
+async function flushQueue(){
+  const q = getQueue(); if (!q.length || !S.token) return;
+  const keep = [];
+  for (const ev of q){
+    try { await api('submit', { ev }, { retries:0 }); LS.del('draft_' + ev.residentId); }
+    catch(e){ if (e.server && !/หมดเวลา/.test(e.message)) toast('ส่งรายการค้างไม่ได้: ' + e.message, 5000); else keep.push(ev); }
+  }
+  LS.set('queue', keep);
+  if (q.length !== keep.length){ toast(`ส่งรายการที่ค้างไว้แล้ว ${q.length - keep.length} รายการ`); if (!S.current) render(); }
+}
+
+const EEG = (cls, color) => `<svg class="${cls}" viewBox="0 0 420 70" preserveAspectRatio="none" aria-hidden="true"><path d="M0 38 L40 38 L52 36 L60 40 L72 37 L84 38 L96 30 L104 46 L112 36 L124 38 L150 38 L160 12 L168 62 L176 26 L184 44 L192 38 L230 38 L240 34 L248 42 L258 37 L280 38 L292 22 L300 54 L308 34 L316 40 L330 38 L360 38 L370 31 L378 45 L386 37 L420 38" fill="none" stroke="${color}" stroke-width="2.2" stroke-linejoin="round" stroke-linecap="round"/></svg>`;
+const BRAIN_LOGO = '<path fill="#fff" fill-opacity=".14" d="M40 95C22 88 18 62 32 46C40 30 60 20 80 22C92 12 118 10 134 18C152 18 170 30 174 48C186 58 186 80 176 92C172 104 160 110 148 108C142 116 128 120 116 116C106 122 90 122 82 114C70 118 56 114 52 104C46 104 42 100 40 95Z"/><path d="M146 108C160 112 170 122 164 132C156 140 138 138 130 128C126 122 130 115 138 112"/><path d="M58 99C76 90 96 86 118 84C128 82 136 86 141 93"/><path d="M112 21C106 33 114 44 106 56C100 66 106 74 102 84"/><path d="M36 64C48 60 52 50 64 47M48 80C60 76 70 82 80 71C88 62 84 52 92 43M68 29C74 39 86 37 92 30M84 56C92 62 96 72 92 80"/><path d="M128 29C126 43 138 46 134 58C130 70 140 75 150 70M156 39C150 50 160 56 168 62M120 70C126 74 128 66 138 66"/><path d="M164 82C156 86 158 96 149 99"/><path d="M76 106C88 101 98 109 110 103C118 99 126 105 134 101"/><path d="M139 121C147 119 155 121 162 125M135 129C145 129 153 131 160 133"/>';
+const BRAIN_BG = '<path fill="currentColor" fill-opacity=".05" d="M40 95C22 88 18 62 32 46C40 30 60 20 80 22C92 12 118 10 134 18C152 18 170 30 174 48C186 58 186 80 176 92C172 104 160 110 148 108C142 116 128 120 116 116C106 122 90 122 82 114C70 118 56 114 52 104C46 104 42 100 40 95Z"/><path d="M146 108C160 112 170 122 164 132C156 140 138 138 130 128C126 122 130 115 138 112"/><path d="M58 99C76 90 96 86 118 84C128 82 136 86 141 93"/><path d="M112 21C106 33 114 44 106 56C100 66 106 74 102 84"/><path d="M36 64C48 60 52 50 64 47M48 80C60 76 70 82 80 71C88 62 84 52 92 43M68 29C74 39 86 37 92 30M84 56C92 62 96 72 92 80"/><path d="M128 29C126 43 138 46 134 58C130 70 140 75 150 70M156 39C150 50 160 56 168 62M120 70C126 74 128 66 138 66"/><path d="M164 82C156 86 158 96 149 99"/><path d="M76 106C88 101 98 109 110 103C118 99 126 105 134 101"/><path d="M139 121C147 119 155 121 162 125M135 129C145 129 153 131 160 133"/><path d="M112 118C114 130 114 140 116 150M125 120C125 132 127 142 129 150"/>';
+let logoN = 0;
+const LOGO = cls => { const id = 'lg' + (++logoN);
+  return `<svg class="logo ${cls || ''}" viewBox="0 0 240 240" aria-hidden="true"><defs><linearGradient id="${id}a" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#8b5cf6"/><stop offset="1" stop-color="#3b1a78"/></linearGradient><radialGradient id="${id}b" cx=".3" cy=".22" r=".8"><stop offset="0" stop-color="#fff" stop-opacity=".3"/><stop offset=".6" stop-color="#fff" stop-opacity="0"/></radialGradient></defs><rect width="240" height="240" rx="56" fill="url(#${id}a)"/><rect width="240" height="240" rx="56" fill="url(#${id}b)"/><g transform="translate(6 12) scale(1.12)" fill="none" stroke="#fff" stroke-width="5.6" stroke-linecap="round" stroke-linejoin="round">${BRAIN_LOGO}</g><path class="pulse" d="M28 198H88L98 180L110 214L122 188L130 198H212" fill="none" stroke="#5eead4" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/></svg>`; };
+const BG_BRAIN = () => `<svg class="bgbrain" viewBox="0 0 200 160" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-width="1.1" stroke-linecap="round" stroke-linejoin="round">${BRAIN_BG}</g></svg>`;
+/* ═══════════ เข้าระบบด้วยรหัส 6 หลัก ═══════════ */
+function renderLogin(msg = ''){
+  releaseScreen();
+  app.innerHTML = `
+  <div class="login">
+    ${BG_BRAIN()}
+    ${LOGO(S.traced ? '' : 'anim')}
+    <h1>ประเมินแพทย์ประจำบ้าน<br>ประสาทวิทยา</h1>
+    <p class="en">Neurology Post-Grad Trainee Evaluation</p>${(S.traced = true, '')}
+    <div class="dots" aria-label="ใส่รหัสแล้ว ${S.pin.length} จาก 6 หลัก">${[0,1,2,3,4,5].map(i => `<span class="${i < S.pin.length ? 'f' : ''}"></span>`).join('')}</div>
+    <p class="err" role="alert" style="${msg ? '' : 'color:inherit;opacity:.6'}">${esc(msg) || 'ใส่รหัส 6 หลัก'}</p>
+    <div class="keypad">
+      ${[1,2,3,4,5,6,7,8,9].map(n => `<button data-key="${n}" aria-label="${n}">${n}</button>`).join('')}
+      <button class="x" data-key="C">ล้าง</button><button data-key="0">0</button><button class="x" data-key="B" aria-label="ลบ">⌫</button>
+    </div>
+    <details class="apibox" ${apiReady() ? '' : 'open'}>
+      <summary>ตั้งค่าการเชื่อมต่อ</summary>
+      <label class="f" for="apiIn">URL ของ Apps Script Web app</label>
+      <input id="apiIn" class="t" placeholder="https://script.google.com/macros/s/…/exec" value="${esc(apiReady() ? S.api : '')}">
+      <div class="row" style="margin-top:8px"><button class="btn pri" data-act="saveApi">บันทึก URL</button></div>
+    </details>
+  </div>`;
+}
+async function pressKey(k){
+  if (S.busy) return;
+  if (k === 'C') S.pin = ''; else if (k === 'B') S.pin = S.pin.slice(0, -1); else if (S.pin.length < 6) S.pin += k;
+  renderLogin();
+  if (S.pin.length === 6){
+    S.busy = true; renderLogin('กำลังตรวจสอบ…');
+    try {
+      const j = await api('login', { pin: S.pin });
+      S.token = j.token; S.role = j.role; LS.set('token', j.token); LS.set('role', j.role);
+      S.pin = ''; S.busy = false; S.tab = 'eval';
+      await loadResidents(); render(); flushQueue();
+    } catch(e){ S.pin = ''; S.busy = false; renderLogin(e.message); }
+  }
+}
+function logout(silent){
+  if (!silent && S.token) api('logout', {}, { retries:0 }).catch(() => {});
+  S.token = null; S.role = null; S.current = null; S.evals = null; S.status = null;
+  LS.del('token'); LS.del('role'); renderLogin();
+}
+
+/* ═══════════ data ═══════════ */
+async function loadResidents(){ const j = await api('residents'); S.residents = j.residents || []; }
+async function loadEvals(){ const j = await api('evaluations'); S.evals = j.evaluations || []; }
+
+const ICON = {
+  eval:'<svg viewBox="0 0 24 24"><rect x="5" y="4" width="14" height="17" rx="2"/><path d="M9 4h6v3H9zM9 12l2 2 4-4M9 17h6"/></svg>',
+  results:'<svg viewBox="0 0 24 24"><path d="M4 20h16M7 16v-5M12 16V7M17 16v-8"/></svg>',
+  residents:'<svg viewBox="0 0 24 24"><circle cx="9" cy="8" r="3.2"/><path d="M3.5 19c.8-3.2 3-5 5.5-5s4.7 1.8 5.5 5M16 5.5a3 3 0 0 1 0 5.6M18 14.5c1.3.8 2.2 2.4 2.5 4.5"/></svg>',
+  settings:'<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/></svg>'
+};
+/* ═══════════ layout หลัก ═══════════ */
+function render(){
+  if (!S.token) return renderLogin();
+  const tabs = [['eval','ประเมิน']];
+  if (S.role === 'admin') tabs.push(['results','ผลประเมิน'], ['residents','รายชื่อ']);
+  tabs.push(['settings','ตั้งค่า']);
+  let body = '';
+  if (S.current) body = viewForm();
+  else if (S.tab === 'eval') body = viewList();
+  else if (S.tab === 'results') body = viewResults();
+  else if (S.tab === 'residents') body = viewResidents();
+  else body = viewSettings();
+  app.innerHTML = `
+  <header class="top"><div class="wrap">
+    ${EEG('eeg', '#c9b2f7')}
+    ${LOGO()}
+    <h1>ประเมินแพทย์ประจำบ้าน<small>ประสาทวิทยา · ${S.role === 'admin' ? 'ผู้ดูแลระบบ' : 'ผู้ประเมิน'}</small></h1>
+    <button class="net ${S.net}" data-act="ping" title="ตรวจการเชื่อมต่อ"><i></i>${S.net === 'ok' ? 'ออนไลน์' : S.net === 'bad' ? 'ออฟไลน์' : 'กำลังเชื่อม'}</button>
+  </div></header>
+  <main><div class="wrap">${body}</div></main>
+  ${S.current ? formBar() : `<nav class="bottom"><div class="wrap">${tabs.map(([k,t]) => `<button data-tab="${k}" class="${S.tab === k ? 'on' : ''}" aria-current="${S.tab === k ? 'page' : 'false'}">${ICON[k]}${t}</button>`).join('')}</div></nav>`}`;
+  if (S.current) updateProgress();
+}
+
+/* ─── แท็บ: รายชื่อที่จะประเมิน ─── */
+function viewList(){
+  const q = getQueue();
+  return `
+  ${q.length ? `<div class="banner">มี ${q.length} แบบประเมินรอส่ง (บันทึกไว้ในเครื่องแล้ว) <button class="btn" data-act="flush">ส่งตอนนี้</button></div>` : ''}
+  <div class="row" style="margin-bottom:12px">
+    <input class="t grow" id="search" placeholder="ค้นหาชื่อแพทย์ประจำบ้าน" value="${esc(S.filter)}" style="flex:1">
+    <button class="btn" data-act="reload">รีเฟรช</button>
+  </div>
+  <div class="sheet" id="reslist">${listItems()}</div>`;
+}
+function listItems(){
+  const f = S.filter.trim().toLowerCase(), t = today();
+  const list = S.residents.filter(r => r.active && (!f || String(r.name).toLowerCase().includes(f)));
+  if (!list.length) return `<div class="empty">${S.residents.length ? 'ไม่พบชื่อที่ค้นหา' : (S.role === 'admin' ? 'ยังไม่มีรายชื่อ — เพิ่มที่เมนู “รายชื่อ”' : 'ยังไม่มีรายชื่อแพทย์ที่เปิดให้ประเมิน')}</div>`;
+  return list.map(r => {
+    const now = r.start <= t && t <= r.end, draft = LS.get('draft_' + r.id, null);
+    return `<button class="res" data-open="${esc(r.id)}">
+      <span class="av ${esc(r.service)}">${esc(initial(r.name))}</span>
+      <div class="grow"><div class="nm">${esc(r.name)}</div>
+      <div class="meta"><span class="svc ${esc(r.service)}">${esc(r.service)}</span>${period(r)}${now ? '<span class="tag">ช่วงปัจจุบัน</span>' : ''}${draft ? '<span class="tag d">มีร่าง</span>' : ''}</div></div>
+      <span class="go" aria-hidden="true">›</span></button>`;
+  }).join('');
+}
+const initial = n => (String(n).replace(/^(นพ\.|พญ\.|นาย|นางสาว|นาง|ดร\.)\s*/, '').trim()[0] || '?');
+
+/* ─── แบบประเมิน (ทีละหมวด) ─── */
+function draftOf(id){
+  const me = LS.get('me', {});
+  return LS.get('draft_' + id, { scores:{}, comment:'', evaluatorName: me.name || '', evaluatorRole: me.role || '' });
+}
+const LAST = SECTIONS.length; // ขั้นสุดท้าย = สรุปและความคิดเห็น
+function secMean(sec, d){ const v = sec.items.map(i => d.scores[i[0]]).filter(x => typeof x === 'number'); return v.length ? v.reduce((a, b) => a + b, 0) / v.length : null; }
+function viewForm(){
+  const r = S.current, d = draftOf(r.id), k = S.sec || 0;
+  const steps = SECTIONS.map((s, i) => `<button class="step ${i === k ? 'on' : ''} ${s.items.every(it => d.scores[it[0]] !== undefined) ? 'done' : ''}" data-step="${i}"><span>${i + 1}</span>${s.th}</button>`).join('')
+    + `<button class="step ${k === LAST ? 'on' : ''}" data-step="${LAST}"><span>✓</span>สรุปและส่ง</button>`;
+  let body;
+  if (k < LAST){
+    const sec = SECTIONS[k];
+    body = `<div class="sechead"><h2>${sec.th}</h2><p>${sec.en} · ${sec.items.length} ข้อ</p></div>
+    ${sec.items.map(([key, th, en], i) => `
+    <div class="item" data-item="${key}" role="group" aria-label="${esc(th)}">
+      <div class="q"><span class="qn">${i + 1}</span><div class="tx">${th}<small>${en}</small></div>${valHtml(d.scores[key])}</div>
+      <div class="gauge">${[1,2,3,4,5,6,7,8,9].map(n => segHtml(n, d.scores[key])).join('')}</div>
+      <div class="gfoot"><div class="gl" aria-hidden="true"><span class="l1">ต้องปรับปรุง</span><span class="l2">พอใช้</span><span class="l3">ดีเยี่ยม</span></div>
+      <button class="na ${d.scores[key] === 'NA' ? 'on' : ''}" data-score="NA" aria-pressed="${d.scores[key] === 'NA'}">N/A</button></div>
+    </div>`).join('')}`;
+  } else {
+    body = `<div class="sechead"><h2>สรุปและส่ง</h2><p>ตรวจคะแนนเฉลี่ยแต่ละหมวด แล้วเขียนความคิดเห็น</p></div>
+    <section class="sheet" style="padding:6px 0">${SECTIONS.map((s, i) => { const m = secMean(s, d);
+      return `<div class="sumrow"><div class="grow"><div>${s.th}</div><div class="meter"><i style="width:${m ? m / 9 * 100 : 0}%;background:var(--${m == null ? 'rule' : ['', 'bad', 'mid', 'good'][band(m)]})"></i></div></div><b class="sc ${m == null ? '' : 'b' + band(m)}">${m == null ? '–' : m.toFixed(1)}</b><button class="btn ghost" data-step="${i}">แก้</button></div>`; }).join('')}</section>
+    <section class="sheet"><h2>ความคิดเห็น <span>ไม่บังคับ</span></h2>
+      <div class="pad"><textarea class="t" id="evComment" data-d="comment" placeholder="จุดเด่น และสิ่งที่ควรพัฒนา">${esc(d.comment)}</textarea></div></section>`;
+  }
+  return `
+  <div class="who">
+    <div class="row"><button class="btn" data-act="back">‹ รายชื่อ</button><span class="grow"></span><span class="svc ${esc(r.service)}">${esc(r.service)}</span></div>
+    <div class="nm" style="margin-top:12px">${esc(r.name)}</div>
+    <div class="muted small">ช่วงประเมิน ${period(r)}</div>
+    ${k === 0 || k === LAST || !d.evaluatorName || !d.evaluatorRole ? `
+    <label class="f" for="evName">ชื่อผู้ประเมิน</label>
+    <input id="evName" class="t" data-d="evaluatorName" value="${esc(d.evaluatorName)}" autocomplete="name">
+    <label class="f">ผู้ประเมินเป็น</label>
+    <div class="chips" id="roles">${ROLES.map(x => `<button class="chip ${d.evaluatorRole === x ? 'on' : ''}" data-role="${esc(x)}">${x}</button>`).join('')}</div>`
+    : `<div class="small muted" style="margin-top:8px">ผู้ประเมิน: ${esc(d.evaluatorName)} (${esc(d.evaluatorRole)})</div>`}
+  </div>
+  <div class="steps" role="tablist">${steps}</div>
+  ${body}`;
+}
+const segHtml = (n, v) => { const f = typeof v === 'number' && n <= v;
+  return `<button class="seg${f ? ' f b' + band(v) : ''}${n === v ? ' cur' : ''}" data-score="${n}" aria-pressed="${n === v}" aria-label="${n} ${bandName(n)}">${n}</button>`; };
+const valHtml = v => v === undefined ? '<output class="val">–<small>ยังไม่ให้</small></output>'
+  : v === 'NA' ? '<output class="val na">N/A<small>ไม่ได้สังเกต</small></output>'
+  : `<output class="val b${band(v)}">${v}<small>${bandName(v)}</small></output>`;
+function paintItem(item, v){
+  item.querySelectorAll('.seg').forEach(b => b.outerHTML = segHtml(Number(b.dataset.score), v));
+  item.querySelector('.val').outerHTML = valHtml(v);
+  const na = item.querySelector('.na'); na.classList.toggle('on', v === 'NA'); na.setAttribute('aria-pressed', v === 'NA');
+  item.classList.remove('miss');
+}
+function formBar(){
+  const k = S.sec || 0;
+  return `<div class="bar"><div class="wrap">
+    ${k > 0 ? '<button class="btn" data-act="prev" aria-label="ก่อนหน้า">‹</button>' : ''}
+    <div class="prog"><span id="progTxt"></span><div><i id="progBar" style="width:0"></i></div></div>
+    ${k < LAST ? '<button class="btn pri" data-act="next">ถัดไป ›</button>' : '<button class="btn pri" data-act="submit" id="submitBtn">ส่งแบบประเมิน</button>'}
+  </div></div>`;
+}
+function saveDraft(mut){
+  const id = S.current.id, d = draftOf(id); mut(d); LS.set('draft_' + id, d);
+  LS.set('me', { name: d.evaluatorName, role: d.evaluatorRole }); return d;
+}
+function updateProgress(){
+  const d = draftOf(S.current.id), done = ITEMS.filter(i => d.scores[i[0]] !== undefined).length;
+  document.getElementById('progTxt').textContent = `ให้คะแนนแล้ว ${done} จาก ${ITEMS.length} ข้อ`;
+  document.getElementById('progBar').style.width = (done / ITEMS.length * 100) + '%';
+  SECTIONS.forEach((s, i) => document.querySelector(`.step[data-step="${i}"]`)?.classList.toggle('done', s.items.every(it => d.scores[it[0]] !== undefined)));
+}
+function goStep(k){ S.sec = Math.max(0, Math.min(LAST, k)); render(); window.scrollTo(0, 0);
+  document.querySelector('.step.on')?.scrollIntoView({ inline:'center', block:'nearest' }); }
+async function submitForm(){
+  const r = S.current, d = draftOf(r.id);
+  const miss = ITEMS.filter(i => d.scores[i[0]] === undefined);
+  if (!d.evaluatorName.trim()){ toast('กรุณาใส่ชื่อผู้ประเมิน'); document.getElementById('evName')?.focus(); return; }
+  if (!d.evaluatorRole){ toast('กรุณาเลือกว่าผู้ประเมินเป็นใคร'); return; }
+  if (miss.length){
+    const secIdx = SECTIONS.findIndex(s => s.items.some(it => it[0] === miss[0][0]));
+    goStep(secIdx);
+    miss.forEach(i => document.querySelector(`[data-item="${i[0]}"]`)?.classList.add('miss'));
+    document.querySelector(`[data-item="${miss[0][0]}"]`)?.scrollIntoView({ behavior:'smooth', block:'center' });
+    toast(`ยังไม่ได้ให้คะแนน ${miss.length} ข้อ (เลือก N/A ได้ถ้าไม่ได้สังเกต)`); return;
+  }
+  const ev = { id: d.id || uid(), residentId: r.id, evaluatorName: d.evaluatorName, evaluatorRole: d.evaluatorRole, scores: d.scores, comment: d.comment };
+  saveDraft(x => x.id = ev.id);
+  const btn = document.getElementById('submitBtn'); btn.disabled = true; btn.textContent = 'กำลังส่ง…';
+  try {
+    const j = await api('submit', { ev });
+    LS.del('draft_' + r.id); S.current = null; S.sec = 0; releaseScreen(); render(); window.scrollTo(0, 0);
+    toast(`ส่งแบบประเมินแล้ว · เฉลี่ยรวม ${j.avgOverall ?? '-'}`);
+  } catch(e){
+    if (e.server){ btn.disabled = false; btn.textContent = 'ส่งแบบประเมิน'; toast(e.message, 5000); return; }
+    const q = getQueue().filter(x => x.id !== ev.id); q.push(ev); LS.set('queue', q);
+    S.current = null; S.sec = 0; releaseScreen(); render();
+    toast('ยังเชื่อมต่อไม่ได้ — เก็บแบบประเมินไว้ในเครื่องแล้ว จะส่งให้อัตโนมัติ', 5000);
+  }
+}
+
+/* ─── แท็บ: ผลประเมิน (ผู้ดูแล) ─── */
+function viewResults(){
+  if (!S.evals) return `<div class="empty">กำลังโหลดผลประเมิน…</div>`;
+  const groups = {};
+  S.evals.forEach(e => (groups[e.residentId] ||= { name:e.residentName, service:e.service, start:e.start, end:e.end, list:[] }).list.push(e));
+  const ids = Object.keys(groups);
+  const sel = S.resFilter && groups[S.resFilter] ? S.resFilter : '';
+  const evs = (sel ? groups[sel].list : S.evals).slice().sort((a, b) => String(b.timestamp).localeCompare(String(a.timestamp)));
+  const num = v => typeof v === 'number' ? v : (v === '' || v === 'N/A' || v == null ? null : Number(v));
+  const mean = arr => { const v = arr.map(num).filter(x => x != null && !isNaN(x)); return v.length ? v.reduce((a, b) => a + b, 0) / v.length : null; };
+  const sc = v => v == null ? '<span class="muted">-</span>' : `<span class="sc b${band(v)}">${v.toFixed(2)}</span>`;
+
+  let summary = '';
+  if (sel){
+    const L = groups[sel].list;
+    summary = `<section class="sheet"><h2>${esc(groups[sel].name)} <span>${esc(groups[sel].service)} · ${period(groups[sel])} · ${L.length} ผู้ประเมิน</span></h2>
+    <div class="scroll"><table class="r"><tr><th>หัวข้อ</th><th style="text-align:right">เฉลี่ย</th><th></th></tr>
+    ${SECTIONS.map(sec => `<tr><td colspan="3" style="font-weight:600;background:var(--paper2)">${sec.th} · เฉลี่ย ${sc(mean(L.map(e => e[sec.key])))}</td></tr>` +
+      sec.items.map(([k, th]) => { const m = mean(L.map(e => e[k]));
+        return `<tr><td>${th}</td><td class="n">${sc(m)}</td><td style="width:30%"><div class="meter"><i style="width:${m ? m / 9 * 100 : 0}%;background:var(--${m == null ? 'rule' : ['', 'bad', 'mid', 'good'][band(m)]})"></i></div></td></tr>`; }).join('')).join('')}
+    <tr><td style="font-weight:700">เฉลี่ยรวม</td><td class="n">${sc(mean(L.map(e => e.avgOverall)))}</td><td></td></tr></table></div></section>`;
+  }
+  return `
+  <div class="row" style="margin-bottom:12px">
+    <select class="t grow" id="resFilter" style="flex:1"><option value="">ทุกคน (${S.evals.length} แบบประเมิน)</option>
+      ${ids.map(id => `<option value="${esc(id)}" ${id === sel ? 'selected' : ''}>${esc(groups[id].name)} · ${esc(groups[id].service)} · ${thDate(groups[id].start)} (${groups[id].list.length})</option>`).join('')}
+    </select>
+    <button class="btn" data-act="reloadEvals">รีเฟรช</button><button class="btn" data-act="csv">ส่งออก CSV</button>
+  </div>
+  ${summary}
+  ${!sel && ids.length ? `<section class="sheet"><h2>สรุปรายบุคคล</h2><div class="scroll"><table class="r">
+    <tr><th>แพทย์</th><th>สาย</th><th style="text-align:right">จำนวน</th><th style="text-align:right">เฉลี่ยรวม</th></tr>
+    ${ids.map(id => `<tr><td><button class="btn" style="padding:2px 8px" data-pick="${esc(id)}">${esc(groups[id].name)}</button><div class="muted small">${period(groups[id])}</div></td><td>${esc(groups[id].service)}</td><td class="n">${groups[id].list.length}</td><td class="n">${sc(mean(groups[id].list.map(e => e.avgOverall)))}</td></tr>`).join('')}
+  </table></div></section>` : ''}
+  <section class="sheet"><h2>รายการแบบประเมิน</h2>
+  ${evs.length ? evs.map(e => `
+    <details class="ev"><summary><span class="grow"><b>${esc(e.residentName)}</b> <span class="muted small">โดย ${esc(e.evaluatorName)} (${esc(e.evaluatorRole)}) · ${thDateTime(e.timestamp)}</span></span>${sc(num(e.avgOverall))}</summary>
+      <div class="body"><div class="scroll"><table class="r">
+        ${SECTIONS.map(sec => `<tr><td colspan="2" style="font-weight:600;background:var(--paper2)">${sec.th}</td><td class="n" style="background:var(--paper2)">${sc(num(e[sec.key]))}</td></tr>` + sec.items.map(([k, th], i) => `<tr><td class="muted">${i + 1}</td><td>${th}</td><td class="n">${e[k] === 'N/A' ? 'N/A' : sc(num(e[k])).replace('.00', '')}</td></tr>`).join('')).join('')}
+      </table></div>
+      ${e.comment ? `<p><b>ความคิดเห็น:</b> ${esc(e.comment)}</p>` : ''}
+      <button class="btn danger" data-delev="${esc(e.id)}">ลบแบบประเมินนี้</button></div>
+    </details>`).join('') : '<div class="empty">ยังไม่มีผลประเมิน</div>'}
+  </section>`;
+}
+function exportCsv(){
+  if (!S.evals || !S.evals.length) return toast('ยังไม่มีข้อมูลให้ส่งออก');
+  const keys = Object.keys(S.evals[0]);
+  const head = keys.map(k => LABEL[k] ? `${k} ${LABEL[k]}` : k);
+  const rows = [head].concat(S.evals.map(e => keys.map(k => e[k])));
+  const csv = rows.map(r => r.map(c => { const s = String(c ?? ''); return /[",\n]/.test(s) ? `"${s.replace(/"/g, '""')}"` : s; }).join(',')).join('\r\n');
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(new Blob(['\uFEFF' + csv], { type:'text/csv;charset=utf-8' }));
+  a.download = `neuro-evaluations-${today()}.csv`; document.body.appendChild(a); a.click();
+  setTimeout(() => { URL.revokeObjectURL(a.href); a.remove(); }, 1000);
+}
+
+/* ─── แท็บ: รายชื่อแพทย์ (ผู้ดูแล) ─── */
+function viewResidents(){
+  const e = S.editing || { name:'', service:'STROKE', start:'', end:'', active:true, note:'' };
+  return `
+  <section class="sheet"><h2>${e.id ? 'แก้ไขรายชื่อ' : 'เพิ่มแพทย์ที่ต้องการประเมิน'}</h2><div class="pad">
+    <label class="f" for="rName">ชื่อแพทย์ประจำบ้าน</label>
+    <input id="rName" class="t" value="${esc(e.name)}" placeholder="เช่น พญ. … / นพ. …">
+    <label class="f">สาย service</label>
+    <div class="chips" id="rSvc">${['GEN','STROKE'].map(s => `<button class="chip ${e.service === s ? 'on' : ''}" data-svc="${s}">${s}</button>`).join('')}</div>
+    <div class="row" style="align-items:flex-start">
+      <div class="grow"><label class="f" for="rStart">วันเริ่ม</label><input id="rStart" type="date" class="t" value="${esc(e.start)}"></div>
+      <div class="grow"><label class="f" for="rEnd">วันสิ้นสุด</label><input id="rEnd" type="date" class="t" value="${esc(e.end)}"></div>
+    </div>
+    <label class="f" for="rNote">หมายเหตุ (ไม่บังคับ)</label>
+    <input id="rNote" class="t" value="${esc(e.note)}" placeholder="เช่น ชั้นปี, ward">
+    <label class="row small" style="margin-top:12px"><input type="checkbox" id="rActive" ${e.active ? 'checked' : ''}> เปิดให้ผู้ประเมินเห็นชื่อนี้</label>
+    <div class="row" style="margin-top:14px">
+      <button class="btn pri" data-act="saveRes">${e.id ? 'บันทึกการแก้ไข' : 'เพิ่มรายชื่อ'}</button>
+      ${e.id || e.name ? '<button class="btn" data-act="cancelRes">ยกเลิก</button>' : ''}
+    </div>
+  </div></section>
+  <section class="sheet"><h2>รายชื่อทั้งหมด <span>${S.residents.length} รายการ</span></h2>
+  ${S.residents.length ? S.residents.map(r => `
+    <div class="res" style="cursor:default;flex-wrap:wrap">
+      <span class="av ${esc(r.service)}">${esc(initial(r.name))}</span>
+      <div class="grow" style="min-width:180px"><div class="nm">${esc(r.name)} ${r.active ? '' : '<span class="tag">ปิดอยู่</span>'}</div>
+      <div class="meta"><span class="svc ${esc(r.service)}">${esc(r.service)}</span>${period(r)} ${r.note ? '· ' + esc(r.note) : ''}</div></div>
+      <div class="row" style="gap:4px">
+        <button class="btn" data-edit="${esc(r.id)}">แก้ไข</button>
+        <button class="btn" data-copy="${esc(r.id)}" title="ใช้ชื่อนี้สร้างช่วงประเมินใหม่">ช่วงใหม่</button>
+        <button class="btn danger" data-delres="${esc(r.id)}" aria-label="ลบ">ลบ</button>
+      </div>
+    </div>`).join('') : '<div class="empty">ยังไม่มีรายชื่อ</div>'}
+  </section>`;
+}
+function readResForm(){
+  return Object.assign({}, S.editing || {}, {
+    name: document.getElementById('rName').value.trim(),
+    service: document.querySelector('#rSvc .chip.on')?.dataset.svc || 'STROKE',
+    start: document.getElementById('rStart').value, end: document.getElementById('rEnd').value,
+    note: document.getElementById('rNote').value.trim(), active: document.getElementById('rActive').checked
+  });
+}
+
+/* ─── แท็บ: ตั้งค่า ─── */
+function viewSettings(){
+  const st = S.status, q = getQueue();
+  return `
+  <section class="sheet"><h2>การเชื่อมต่อ</h2><div class="pad">
+    <dl class="kv"><dt>สถานะ</dt><dd>${S.net === 'ok' ? 'ออนไลน์' : S.net === 'bad' ? 'เชื่อมต่อไม่ได้' : 'กำลังตรวจสอบ'}</dd>
+    <dt>ติดต่อล่าสุด</dt><dd>${S.lastPing ? new Date(S.lastPing).toLocaleTimeString('th-TH') : '-'} (ตรวจซ้ำทุก 5 นาที)</dd>
+    <dt>รอส่ง</dt><dd>${q.length} รายการ</dd></dl>
+    <label class="f" for="apiIn">URL ของ Apps Script Web app</label>
+    <input id="apiIn" class="t" value="${esc(S.api)}">
+    <div class="row" style="margin-top:8px"><button class="btn" data-act="saveApi">บันทึก URL</button><button class="btn" data-act="ping">ทดสอบการเชื่อมต่อ</button>${q.length ? '<button class="btn" data-act="flush">ส่งรายการค้าง</button>' : ''}</div>
+    <label class="row small" style="margin-top:14px"><input type="checkbox" id="wakeChk" ${LS.get('wake', true) ? 'checked' : ''}> ไม่ให้หน้าจอดับระหว่างกรอกแบบประเมิน</label>
+  </div></section>
+  ${S.role === 'admin' ? `
+  <section class="sheet"><h2>ระบบหลังบ้าน</h2><div class="pad">
+    ${st ? `<dl class="kv">
+      <dt>สำรองล่าสุด</dt><dd>${st.lastBackup ? thDateTime(st.lastBackup) : 'ยังไม่เคย'} (อัตโนมัติทุกวันอาทิตย์ 02:00)</dd>
+      <dt>กันหลับล่าสุด</dt><dd>${st.lastKeepAlive ? thDateTime(st.lastKeepAlive) : 'ยังไม่ทำงาน — รัน setup()'}</dd>
+      <dt>LINE OA</dt><dd>${st.lineReady ? 'พร้อมแจ้งเตือน' : 'ยังไม่ได้ตั้งค่า'}</dd>
+      <dt>ข้อมูล</dt><dd>${st.residents} รายชื่อ · ${st.evaluations} แบบประเมิน</dd>
+      <dt>Trigger</dt><dd class="small">${esc((st.triggers || []).join(', ') || 'ไม่มี')}</dd></dl>` : '<p class="muted">กำลังโหลด…</p>'}
+    <div class="row" style="margin-top:12px">
+      <button class="btn" data-act="testLine">ส่งข้อความทดสอบ LINE</button>
+      <button class="btn" data-act="backup">สำรองข้อมูลตอนนี้</button>
+    </div>
+  </div></section>` : ''}
+  <div class="row"><button class="btn danger" data-act="logout">ออกจากระบบ</button><span class="muted small">v${VERSION}</span></div>`;
+}
+
+/* ═══════════ events ═══════════ */
+app.addEventListener('click', async ev => {
+  const t = ev.target.closest('button'); if (!t) return;
+  const d = t.dataset;
+  try {
+    if (d.key) return pressKey(d.key);
+    if (d.tab){
+      S.tab = d.tab; render();
+      if (d.tab === 'results'){ await loadEvals(); render(); }
+      if (d.tab === 'settings' && S.role === 'admin'){ S.status = await api('status'); render(); }
+      return;
+    }
+    if (d.open){ S.current = S.residents.find(r => String(r.id) === d.open); S.sec = 0; render(); window.scrollTo(0, 0); keepScreen(); return; }
+    if (d.score){
+      const item = t.closest('.item'), k = item.dataset.item, cur = draftOf(S.current.id).scores[k];
+      const val = d.score === 'NA' ? (cur === 'NA' ? undefined : 'NA') : Number(d.score);
+      saveDraft(x => { if (val === undefined) delete x.scores[k]; else x.scores[k] = val; });
+      paintItem(item, val); updateProgress(); return;
+    }
+    if (d.step !== undefined){ goStep(Number(d.step)); return; }
+    if (d.role){ saveDraft(x => x.evaluatorRole = d.role); t.parentNode.querySelectorAll('.chip').forEach(c => c.classList.toggle('on', c === t)); return; }
+    if (d.svc){ t.parentNode.querySelectorAll('.chip').forEach(c => c.classList.toggle('on', c === t)); return; }
+    if (d.pick){ S.resFilter = d.pick; render(); window.scrollTo(0, 0); return; }
+    if (d.edit){ S.editing = Object.assign({}, S.residents.find(r => String(r.id) === d.edit)); render(); window.scrollTo(0, 0); return; }
+    if (d.copy){ const r = S.residents.find(x => String(x.id) === d.copy); S.editing = { name:r.name, service:r.service, start:'', end:'', active:true, note:r.note || '' }; render(); window.scrollTo(0, 0); document.getElementById('rStart').focus(); return; }
+    if (d.delres){
+      const r = S.residents.find(x => String(x.id) === d.delres);
+      if (!confirm(`ลบ “${r.name}” (${r.service}) ออกจากรายชื่อ?\nผลประเมินที่ส่งแล้วจะยังอยู่`)) return;
+      await api('deleteResident', { id:d.delres }); await loadResidents(); render(); toast('ลบรายชื่อแล้ว'); return;
+    }
+    if (d.delev){
+      if (!confirm('ลบแบบประเมินนี้ถาวร?')) return;
+      await api('deleteEvaluation', { id:d.delev }); await loadEvals(); render(); toast('ลบแบบประเมินแล้ว'); return;
+    }
+    switch (d.act){
+      case 'saveApi': {
+        const v = document.getElementById('apiIn').value.trim();
+        if (!/^https:\/\/script\.google(usercontent)?\.com\/.+\/exec$/.test(v)) return toast('URL ต้องขึ้นต้น https://script.google.com/ และลงท้าย /exec', 4500);
+        S.api = v.replace(/\/u\/\d+\//, '/'); LS.set('api', S.api); toast('บันทึก URL แล้ว'); await heartbeat(true);
+        return S.token ? render() : renderLogin();
+      }
+      case 'ping': S.lastPing = 0; await heartbeat(true); toast(S.net === 'ok' ? 'เชื่อมต่อได้ปกติ' : 'ยังเชื่อมต่อไม่ได้'); if (S.token && !S.current) render(); return;
+      case 'flush': await flushQueue(); render(); return;
+      case 'reload': await loadResidents(); render(); toast('อัปเดตรายชื่อแล้ว'); return;
+      case 'reloadEvals': await loadEvals(); render(); return;
+      case 'csv': return exportCsv();
+      case 'back': S.current = null; S.sec = 0; releaseScreen(); render(); return;
+      case 'next': return goStep((S.sec || 0) + 1);
+      case 'prev': return goStep((S.sec || 0) - 1);
+      case 'submit': return submitForm();
+      case 'saveRes': {
+        const r = readResForm();
+        if (!r.name) return toast('กรุณาใส่ชื่อแพทย์');
+        if (!r.start || !r.end || r.start > r.end) return toast('กรุณาเลือกวันเริ่มและวันสิ้นสุดให้ถูกต้อง');
+        t.disabled = true;
+        await api('saveResident', { resident:r }); S.editing = null; await loadResidents(); render();
+        toast(r.id ? 'บันทึกการแก้ไขแล้ว' : 'เพิ่มรายชื่อแล้ว'); return;
+      }
+      case 'cancelRes': S.editing = null; render(); return;
+      case 'testLine': { const j = await api('testLine'); toast(j.sent ? `ส่งข้อความทดสอบแล้ว (${j.sent} ปลายทาง)` : 'ส่งไม่สำเร็จ: ' + (j.reason || (j.errors || []).join(' ')), 6000); return; }
+      case 'backup': { t.disabled = true; t.textContent = 'กำลังสำรอง…'; const j = await api('backupNow', {}, { timeout:90000, retries:0 }); toast('สำรองข้อมูลแล้ว: ' + j.backup); S.status = await api('status'); render(); return; }
+      case 'logout': if (confirm('ออกจากระบบ?')) logout(); return;
+    }
+  } catch(e){ toast(e.message, 5000); if (t.isConnected) t.disabled = false; }
+});
+app.addEventListener('input', ev => {
+  const t = ev.target;
+  if (t.id === 'search'){ S.filter = t.value; document.getElementById('reslist').innerHTML = listItems(); }
+  if (t.dataset.d && S.current) saveDraft(x => x[t.dataset.d] = t.value);
+});
+app.addEventListener('change', ev => {
+  if (ev.target.id === 'resFilter'){ S.resFilter = ev.target.value; render(); }
+  if (ev.target.id === 'wakeChk'){ LS.set('wake', ev.target.checked); }
+});
+document.addEventListener('keydown', e => {
+  if (S.token || document.activeElement?.tagName === 'INPUT') return;
+  if (/^\d$/.test(e.key)) pressKey(e.key); else if (e.key === 'Backspace') pressKey('B');
+});
+
+/* ═══════════ start ═══════════ */
+(async function start(){
+  if (!S.token) { renderLogin(); heartbeat(true); return; }
+  app.innerHTML = '<div class="empty" style="padding-top:40vh">กำลังเชื่อมต่อ…</div>';
+  try { await loadResidents(); render(); flushQueue(); }
+  catch(e){ if (S.token) { render(); toast(e.message, 5000); } }
+})();
+</script>
+</body>
+</html>
