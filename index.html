@@ -132,7 +132,7 @@ textarea.t{min-height:110px;resize:vertical}
 .q .tx{flex:1;font-size:15.5px;font-weight:500;line-height:1.4}
 .q .tx small{display:block;color:var(--muted);font-size:12.5px;font-weight:400}
 .val{flex:none;min-width:58px;text-align:right;font-size:26px;font-weight:700;line-height:1;color:var(--rule)}
-.val small{display:block;font-size:11px;font-weight:500;margin-top:3px}
+.val small{display:block;font-size:10.5px;font-weight:500;margin-top:3px;letter-spacing:-.1px;white-space:nowrap}
 .val.b1{color:var(--bad)}.val.b2{color:var(--mid)}.val.b3{color:var(--good)}.val.na{color:var(--muted);font-size:18px}
 /* เกจคะแนน 1–9 แบ่ง 3 ช่วง */
 .gauge,.gl{display:grid;grid-template-columns:repeat(3,1fr) 6px repeat(3,1fr) 6px repeat(3,1fr);column-gap:3px}
@@ -144,7 +144,7 @@ textarea.t{min-height:110px;resize:vertical}
 @media (prefers-color-scheme:dark){.seg.f{color:#160c27}}
 .seg.cur{font-weight:700;font-size:16px;box-shadow:inset 0 0 0 2px rgba(255,255,255,.55)}
 .gfoot{display:flex;align-items:center;gap:10px;margin-top:6px}
-.gl{flex:1;font-size:11px;color:var(--muted);text-align:center}
+.gl{flex:1;font-size:10.5px;letter-spacing:-.1px;color:var(--muted);text-align:center}
 .gl .l1{grid-column:1/4}.gl .l2{grid-column:5/8}.gl .l3{grid-column:9/12}
 .na{border:1.5px solid var(--rule);background:none;border-radius:999px;padding:2px 12px;font-size:12px;color:var(--muted)}
 .na.on{background:var(--ink);border-color:var(--ink);color:var(--bg);font-weight:600}
@@ -177,6 +177,7 @@ details.ev .body{padding:0 16px 16px}
 .empty{padding:32px 16px;text-align:center;color:var(--muted)}
 .kv{display:grid;grid-template-columns:auto 1fr;gap:6px 14px;font-size:14px}
 .kv dt{color:var(--muted)}.kv dd{margin:0}
+.be{display:block;min-height:18px;margin-top:3px}
 
 /* ── โลโก้และสมองโปร่งใส ── */
 .logo{display:block;flex:none}
@@ -193,7 +194,7 @@ header.top .logo{width:36px;height:36px;position:relative}
 <script>
 /* ═══════════ ตั้งค่า: ใส่ URL ของ Apps Script Web app (ลงท้าย /exec) ═══════════ */
 const DEFAULT_API = 'https://script.google.com/macros/s/AKfycbwfVKN4V2FKyznqtTQ7bXguWIPUXnRDPcwXv6MtvbsnyJnGtOFnqeHK0xigTYfDkPPcOg/exec';
-const VERSION = '1.3.0';
+const VERSION = '1.6.0';
 
 /* ═══════════ แบบประเมิน (ตามแบบฟอร์มกระดาษ) ═══════════ */
 const SECTIONS = [
@@ -235,17 +236,20 @@ const LS = {
 
 const S = {
   api: LS.get('api', DEFAULT_API), token: LS.get('token', null), role: LS.get('role', null),
-  tab: 'eval', sec: 0, residents: [], evals: null, status: null, current: null,
+  tab: 'eval', sec: 0, tasks: [], assigns: null, assignFor: null, name: LS.get('name', ''), code: LS.get('code', ''), staff: null, editStaff: null, pinFor: null, years: [], yearFilter: LS.get('yearFilter', null), editYear: null, residents: [], evals: null, status: null, current: null,
   filter: '', resFilter: '', editing: null, net: 'wait', lastPing: 0, pin: '', busy: false
 };
 const app = document.getElementById('app');
+// ลิงก์จาก LINE: ?a=<รหัสงาน> → เปิดแบบประเมินที่แอดมินส่งมาให้ทันที (จำไว้ระหว่างใส่รหัส)
+(() => { const a = new URLSearchParams(location.search).get('a'); if (a){ LS.set('task', a); history.replaceState(null, '', location.pathname); } })();
+const appUrl = () => location.origin + location.pathname;
 
 /* ═══════════ utils ═══════════ */
 const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const sleep = ms => new Promise(r => setTimeout(r, ms));
 const uid = () => (crypto.randomUUID ? crypto.randomUUID() : Date.now().toString(36) + Math.random().toString(36).slice(2));
 const band = n => n < 4 ? 1 : n < 7 ? 2 : 3;
-const bandName = n => ['','ต้องปรับปรุง','พอใช้','ดีเยี่ยม'][band(n)];
+const bandName = n => ['','Unsatisfactory','Satisfactory','Superior'][band(n)];
 const today = () => new Date().toISOString().slice(0,10);
 function thDate(iso){
   if(!iso) return '-';
@@ -373,23 +377,51 @@ async function pressKey(k){
     S.busy = true; renderLogin('กำลังตรวจสอบ…');
     try {
       const j = await api('login', { pin: S.pin });
-      S.token = j.token; S.role = j.role; LS.set('token', j.token); LS.set('role', j.role);
+      S.token = j.token; S.role = j.role; S.name = j.name || ''; S.code = j.code || ''; LS.set('token', j.token); LS.set('role', j.role); LS.set('name', S.name); LS.set('code', S.code);
       S.pin = ''; S.busy = false; S.tab = 'eval';
-      await loadResidents(); render(); flushQueue();
+      await loadResidents(); render(); flushQueue(); openPendingTask();
     } catch(e){ S.pin = ''; S.busy = false; renderLogin(e.message); }
   }
 }
 function logout(silent){
   if (!silent && S.token) api('logout', {}, { retries:0 }).catch(() => {});
   S.token = null; S.role = null; S.current = null; S.evals = null; S.status = null;
-  LS.del('token'); LS.del('role'); renderLogin();
+  LS.del('token'); LS.del('role'); LS.del('name'); LS.del('code'); S.name = ''; S.code = ''; S.staff = null; renderLogin();
 }
 
 /* ═══════════ data ═══════════ */
-async function loadResidents(){ const j = await api('residents'); S.residents = j.residents || []; }
+async function loadResidents(){ const j = await api('residents'); S.residents = j.residents || []; S.years = j.years || []; loadTasks(); }
+async function loadTasks(){ if (!S.code) return; try { S.tasks = (await api('myTasks')).tasks || []; if (!S.current && S.tab === 'eval') render(); } catch(e){} }
+async function openPendingTask(){
+  const id = LS.get('task', null); if (!id) return false; LS.del('task');
+  try {
+    const j = await api('task', { id });
+    if (j.task.status !== 'รอประเมิน'){ toast('งานนี้ประเมินเรียบร้อยแล้ว ขอบคุณค่ะ', 4000); return false; }
+    openTask(j.task, j.resident); return true;
+  } catch(e){ toast(e.message, 5000); return false; }
+}
+function openTask(t, r){
+  S.current = Object.assign({}, r || S.residents.find(x => String(x.id) === t.residentId) || { id:t.residentId, name:t.residentName, service:t.service },
+    { start:t.start, end:t.end, _aid:t.id, _staff:t.staffName });
+  const d = draftOf(S.current.id);
+  if (!d.evaluatorName) d.evaluatorName = t.staffName;
+  if (!d.evaluatorRole) d.evaluatorRole = 'อาจารย์';
+  LS.set('draft_' + S.current.id, d);
+  S.sec = 0; render(); window.scrollTo(0, 0); keepScreen();
+}
+/* ปีการศึกษา */
+const yearName = id => (S.years.find(y => String(y.id) === String(id)) || {}).name || '';
+const currentYearId = () => { const t = today(); const y = S.years.find(y => y.start <= t && t <= y.end); return y ? y.id : (S.years[0] ? S.years[0].id : ''); };
+const activeYear = () => (S.yearFilter === null ? currentYearId() : S.yearFilter);
+const yearChips = () => S.years.length ? `<div class="chips" style="margin-bottom:12px" aria-label="ปีการศึกษา">
+  <button class="chip ${activeYear() === '' ? 'on' : ''}" data-yearf="">ทุกปี</button>
+  ${S.years.map(y => `<button class="chip ${String(activeYear()) === String(y.id) ? 'on' : ''}" data-yearf="${esc(y.id)}">ปีการศึกษา ${esc(y.name)}</button>`).join('')}</div>` : '';
+const inYear = r => { const a = activeYear(); return !a || String(r.year) === String(a); };
+const dateField = (id, label, v) => `<div class="grow" style="min-width:150px"><label class="f" for="${id}">${label}</label><input id="${id}" type="date" class="t" value="${esc(v)}"><small class="muted be" id="${id}_be">${v ? '= ' + thDate(v) : ''}</small></div>`;
 async function loadEvals(){ const j = await api('evaluations'); S.evals = j.evaluations || []; }
 
 const ICON = {
+  staff:'<svg viewBox="0 0 24 24"><rect x="3.5" y="5" width="17" height="14" rx="2"/><circle cx="9" cy="11" r="2.2"/><path d="M5.8 16.2c.6-1.6 1.8-2.4 3.2-2.4s2.6.8 3.2 2.4M14.5 10h3.5M14.5 13.5h3.5"/></svg>',
   eval:'<svg viewBox="0 0 24 24"><rect x="5" y="4" width="14" height="17" rx="2"/><path d="M9 4h6v3H9zM9 12l2 2 4-4M9 17h6"/></svg>',
   results:'<svg viewBox="0 0 24 24"><path d="M4 20h16M7 16v-5M12 16V7M17 16v-8"/></svg>',
   residents:'<svg viewBox="0 0 24 24"><circle cx="9" cy="8" r="3.2"/><path d="M3.5 19c.8-3.2 3-5 5.5-5s4.7 1.8 5.5 5M16 5.5a3 3 0 0 1 0 5.6M18 14.5c1.3.8 2.2 2.4 2.5 4.5"/></svg>',
@@ -399,19 +431,20 @@ const ICON = {
 function render(){
   if (!S.token) return renderLogin();
   const tabs = [['eval','ประเมิน']];
-  if (S.role === 'admin') tabs.push(['results','ผลประเมิน'], ['residents','รายชื่อ']);
+  if (S.role === 'admin') tabs.push(['results','ผลประเมิน'], ['residents','รายชื่อ'], ['staff','บุคลากร']);
   tabs.push(['settings','ตั้งค่า']);
   let body = '';
   if (S.current) body = viewForm();
   else if (S.tab === 'eval') body = viewList();
   else if (S.tab === 'results') body = viewResults();
   else if (S.tab === 'residents') body = viewResidents();
+  else if (S.tab === 'staff') body = viewStaff();
   else body = viewSettings();
   app.innerHTML = `
   <header class="top"><div class="wrap">
     ${EEG('eeg', '#c9b2f7')}
     ${LOGO()}
-    <h1>ประเมินแพทย์ประจำบ้าน<small>ประสาทวิทยา · ${S.role === 'admin' ? 'ผู้ดูแลระบบ' : 'ผู้ประเมิน'}</small></h1>
+    <h1>ประเมินแพทย์ประจำบ้าน<small>${S.name ? esc(S.name) + ' · ' : 'ประสาทวิทยา · '}${S.role === 'admin' ? 'แอดมิน' : 'ผู้ประเมิน'}</small></h1>
     <button class="net ${S.net}" data-act="ping" title="ตรวจการเชื่อมต่อ"><i></i>${S.net === 'ok' ? 'ออนไลน์' : S.net === 'bad' ? 'ออฟไลน์' : 'กำลังเชื่อม'}</button>
   </div></header>
   <main><div class="wrap">${body}</div></main>
@@ -428,12 +461,18 @@ function viewList(){
     <input class="t grow" id="search" placeholder="ค้นหาชื่อแพทย์ประจำบ้าน" value="${esc(S.filter)}" style="flex:1">
     <button class="btn" data-act="reload">รีเฟรช</button>
   </div>
+  ${S.tasks.length ? `<section class="sheet" style="border:2px solid var(--pen)"><h2>งานที่ได้รับมอบหมาย <span>${S.tasks.length} รายการรอประเมิน</span></h2>
+    ${S.tasks.map(t => `<button class="res" data-task="${esc(t.id)}"><span class="av ${esc(t.service)}">${esc(initial(t.residentName))}</span>
+      <div class="grow"><div class="nm">${esc(t.residentName)}</div><div class="meta"><span class="svc ${esc(t.service)}">${esc(t.service)}</span>${period(t)}</div>
+      <div class="small muted">ส่งโดย ${esc(t.sentBy || 'แอดมิน')} · ${thDateTime(t.sentAt)}</div></div><span class="go" aria-hidden="true">›</span></button>`).join('')}
+  </section>` : ''}
+  ${yearChips()}
   <div class="sheet" id="reslist">${listItems()}</div>`;
 }
 function listItems(){
   const f = S.filter.trim().toLowerCase(), t = today();
-  const list = S.residents.filter(r => r.active && (!f || String(r.name).toLowerCase().includes(f)));
-  if (!list.length) return `<div class="empty">${S.residents.length ? 'ไม่พบชื่อที่ค้นหา' : (S.role === 'admin' ? 'ยังไม่มีรายชื่อ — เพิ่มที่เมนู “รายชื่อ”' : 'ยังไม่มีรายชื่อแพทย์ที่เปิดให้ประเมิน')}</div>`;
+  const list = S.residents.filter(r => r.active && inYear(r) && (!f || String(r.name).toLowerCase().includes(f)));
+  if (!list.length) return `<div class="empty">${S.residents.length ? (f ? 'ไม่พบชื่อที่ค้นหา' : 'ไม่มีรายชื่อในปีการศึกษานี้ — กด “ทุกปี” เพื่อดูทั้งหมด') : (S.role === 'admin' ? 'ยังไม่มีรายชื่อ — เพิ่มที่เมนู “รายชื่อ”' : 'ยังไม่มีรายชื่อแพทย์ที่เปิดให้ประเมิน')}</div>`;
   return list.map(r => {
     const now = r.start <= t && t <= r.end, draft = LS.get('draft_' + r.id, null);
     return `<button class="res" data-open="${esc(r.id)}">
@@ -448,7 +487,7 @@ const initial = n => (String(n).replace(/^(นพ\.|พญ\.|นาย|นาง
 /* ─── แบบประเมิน (ทีละหมวด) ─── */
 function draftOf(id){
   const me = LS.get('me', {});
-  return LS.get('draft_' + id, { scores:{}, comment:'', evaluatorName: me.name || '', evaluatorRole: me.role || '' });
+  return LS.get('draft_' + id, { scores:{}, comment:'', evaluatorName: S.name && S.name !== 'ผู้ดูแลหลัก' ? S.name : (me.name || ''), evaluatorRole: me.role || (S.code ? 'อาจารย์' : '') });
 }
 const LAST = SECTIONS.length; // ขั้นสุดท้าย = สรุปและความคิดเห็น
 function secMean(sec, d){ const v = sec.items.map(i => d.scores[i[0]]).filter(x => typeof x === 'number'); return v.length ? v.reduce((a, b) => a + b, 0) / v.length : null; }
@@ -464,7 +503,7 @@ function viewForm(){
     <div class="item" data-item="${key}" role="group" aria-label="${esc(th)}">
       <div class="q"><span class="qn">${i + 1}</span><div class="tx">${th}<small>${en}</small></div>${valHtml(d.scores[key])}</div>
       <div class="gauge">${[1,2,3,4,5,6,7,8,9].map(n => segHtml(n, d.scores[key])).join('')}</div>
-      <div class="gfoot"><div class="gl" aria-hidden="true"><span class="l1">ต้องปรับปรุง</span><span class="l2">พอใช้</span><span class="l3">ดีเยี่ยม</span></div>
+      <div class="gfoot"><div class="gl" aria-hidden="true"><span class="l1">Unsatisfactory</span><span class="l2">Satisfactory</span><span class="l3">Superior</span></div>
       <button class="na ${d.scores[key] === 'NA' ? 'on' : ''}" data-score="NA" aria-pressed="${d.scores[key] === 'NA'}">N/A</button></div>
     </div>`).join('')}`;
   } else {
@@ -479,6 +518,7 @@ function viewForm(){
     <div class="row"><button class="btn" data-act="back">‹ รายชื่อ</button><span class="grow"></span><span class="svc ${esc(r.service)}">${esc(r.service)}</span></div>
     <div class="nm" style="margin-top:12px">${esc(r.name)}</div>
     <div class="muted small">ช่วงประเมิน ${period(r)}</div>
+    ${r._aid ? `<div class="tag" style="display:inline-block;margin-top:6px">งานที่แอดมินส่งให้ ${esc(r._staff || '')}</div>` : ''}
     ${k === 0 || k === LAST || !d.evaluatorName || !d.evaluatorRole ? `
     <label class="f" for="evName">ชื่อผู้ประเมิน</label>
     <input id="evName" class="t" data-d="evaluatorName" value="${esc(d.evaluatorName)}" autocomplete="name">
@@ -532,12 +572,12 @@ async function submitForm(){
     document.querySelector(`[data-item="${miss[0][0]}"]`)?.scrollIntoView({ behavior:'smooth', block:'center' });
     toast(`ยังไม่ได้ให้คะแนน ${miss.length} ข้อ (เลือก N/A ได้ถ้าไม่ได้สังเกต)`); return;
   }
-  const ev = { id: d.id || uid(), residentId: r.id, evaluatorName: d.evaluatorName, evaluatorRole: d.evaluatorRole, scores: d.scores, comment: d.comment };
+  const ev = { id: d.id || uid(), residentId: r.id, assignmentId: r._aid || '', evaluatorName: d.evaluatorName, evaluatorRole: d.evaluatorRole, scores: d.scores, comment: d.comment };
   saveDraft(x => x.id = ev.id);
   const btn = document.getElementById('submitBtn'); btn.disabled = true; btn.textContent = 'กำลังส่ง…';
   try {
     const j = await api('submit', { ev });
-    LS.del('draft_' + r.id); S.current = null; S.sec = 0; releaseScreen(); render(); window.scrollTo(0, 0);
+    LS.del('draft_' + r.id); if (r._aid) S.tasks = S.tasks.filter(x => x.id !== r._aid); S.current = null; S.sec = 0; releaseScreen(); render(); window.scrollTo(0, 0);
     toast(`ส่งแบบประเมินแล้ว · เฉลี่ยรวม ${j.avgOverall ?? '-'}`);
   } catch(e){
     if (e.server){ btn.disabled = false; btn.textContent = 'ส่งแบบประเมิน'; toast(e.message, 5000); return; }
@@ -606,47 +646,138 @@ function exportCsv(){
 
 /* ─── แท็บ: รายชื่อแพทย์ (ผู้ดูแล) ─── */
 function viewResidents(){
-  const e = S.editing || { name:'', service:'STROKE', start:'', end:'', active:true, note:'' };
+  const e = S.editing || { name:'', service:'STROKE', start:'', end:'', active:true, note:'', year: activeYear() || '' };
+  const y = S.editYear || { name:'', start:'', end:'' };
+  const list = S.residents.filter(inYear);
   return `
+  <section class="sheet"><h2>ปีการศึกษา <span>${S.years.length} ปี</span></h2><div class="pad">
+    ${S.years.map(x => `<div class="row" style="padding:8px 0;border-bottom:1px solid var(--rule)">
+      <div class="grow"><b>ปีการศึกษา ${esc(x.name)}</b><div class="small muted">${period(x)} · ${S.residents.filter(r => String(r.year) === String(x.id)).length} รายชื่อ</div></div>
+      <button class="btn" data-yedit="${esc(x.id)}">แก้ไข</button><button class="btn danger" data-ydel="${esc(x.id)}">ลบ</button></div>`).join('')}
+    <div style="margin-top:6px">
+      <label class="f" for="yName">${y.id ? 'แก้ไขปีการศึกษา' : 'เพิ่มปีการศึกษาใหม่'}</label>
+      <input id="yName" class="t" value="${esc(y.name)}" placeholder="เช่น 2569 (ระบบเติม 1 ก.ค. 2569 – 30 ก.ย. 2570 ให้)" inputmode="numeric">
+      <div class="row" style="align-items:flex-start">${dateField('yStart', 'วันเริ่ม', y.start)}${dateField('yEnd', 'วันสิ้นสุด', y.end)}</div>
+      <div class="row" style="margin-top:12px"><button class="btn pri" data-act="saveYear">${y.id ? 'บันทึกการแก้ไข' : 'เพิ่มปีการศึกษา'}</button>${y.id ? '<button class="btn" data-act="cancelYear">ยกเลิก</button>' : ''}</div>
+    </div>
+  </div></section>
+
   <section class="sheet"><h2>${e.id ? 'แก้ไขรายชื่อ' : 'เพิ่มแพทย์ที่ต้องการประเมิน'}</h2><div class="pad">
     <label class="f" for="rName">ชื่อแพทย์ประจำบ้าน</label>
     <input id="rName" class="t" value="${esc(e.name)}" placeholder="เช่น พญ. … / นพ. …">
+    <label class="f" for="rYear">ปีการศึกษา</label>
+    <select id="rYear" class="t"><option value="">— ไม่ระบุ —</option>${S.years.map(x => `<option value="${esc(x.id)}" ${String(e.year) === String(x.id) ? 'selected' : ''}>ปีการศึกษา ${esc(x.name)} (${period(x)})</option>`).join('')}</select>
+    <small class="muted">เลือกปีการศึกษาแล้ว วันเริ่ม–สิ้นสุดจะเติมให้อัตโนมัติ แก้เป็นช่วง rotation ได้</small>
     <label class="f">สาย service</label>
-    <div class="chips" id="rSvc">${['GEN','STROKE'].map(s => `<button class="chip ${e.service === s ? 'on' : ''}" data-svc="${s}">${s}</button>`).join('')}</div>
-    <div class="row" style="align-items:flex-start">
-      <div class="grow"><label class="f" for="rStart">วันเริ่ม</label><input id="rStart" type="date" class="t" value="${esc(e.start)}"></div>
-      <div class="grow"><label class="f" for="rEnd">วันสิ้นสุด</label><input id="rEnd" type="date" class="t" value="${esc(e.end)}"></div>
-    </div>
+    <div class="chips" id="rSvc">${['GEN','STROKE'].map(sv => `<button class="chip ${e.service === sv ? 'on' : ''}" data-svc="${sv}">${sv}</button>`).join('')}</div>
+    <div class="row" style="align-items:flex-start">${dateField('rStart', 'วันเริ่ม', e.start)}${dateField('rEnd', 'วันสิ้นสุด', e.end)}</div>
     <label class="f" for="rNote">หมายเหตุ (ไม่บังคับ)</label>
-    <input id="rNote" class="t" value="${esc(e.note)}" placeholder="เช่น ชั้นปี, ward">
+    <input id="rNote" class="t" value="${esc(e.note)}" placeholder="เช่น R1, R2, ward">
     <label class="row small" style="margin-top:12px"><input type="checkbox" id="rActive" ${e.active ? 'checked' : ''}> เปิดให้ผู้ประเมินเห็นชื่อนี้</label>
     <div class="row" style="margin-top:14px">
       <button class="btn pri" data-act="saveRes">${e.id ? 'บันทึกการแก้ไข' : 'เพิ่มรายชื่อ'}</button>
       ${e.id || e.name ? '<button class="btn" data-act="cancelRes">ยกเลิก</button>' : ''}
     </div>
   </div></section>
-  <section class="sheet"><h2>รายชื่อทั้งหมด <span>${S.residents.length} รายการ</span></h2>
-  ${S.residents.length ? S.residents.map(r => `
+
+  ${yearChips()}
+  <section class="sheet"><h2>รายชื่อ <span>${list.length} รายการ</span></h2>
+  ${list.length ? list.map(r => `
     <div class="res" style="cursor:default;flex-wrap:wrap">
       <span class="av ${esc(r.service)}">${esc(initial(r.name))}</span>
-      <div class="grow" style="min-width:180px"><div class="nm">${esc(r.name)} ${r.active ? '' : '<span class="tag">ปิดอยู่</span>'}</div>
-      <div class="meta"><span class="svc ${esc(r.service)}">${esc(r.service)}</span>${period(r)} ${r.note ? '· ' + esc(r.note) : ''}</div></div>
+      <div class="grow" style="min-width:180px"><div class="nm">${esc(r.name)} ${r.active ? '' : '<span class="tag d">ปิดอยู่</span>'}</div>
+      <div class="meta"><span class="svc ${esc(r.service)}">${esc(r.service)}</span>${period(r)}${r.year && yearName(r.year) ? ' · ปี ' + esc(yearName(r.year)) : ''}${r.note ? ' · ' + esc(r.note) : ''}${assignTags(r.id)}</div></div>
       <div class="row" style="gap:4px">
         <button class="btn" data-edit="${esc(r.id)}">แก้ไข</button>
+        <button class="btn pri" data-assign="${esc(r.id)}">ส่งให้อาจารย์</button>
         <button class="btn" data-copy="${esc(r.id)}" title="ใช้ชื่อนี้สร้างช่วงประเมินใหม่">ช่วงใหม่</button>
         <button class="btn danger" data-delres="${esc(r.id)}" aria-label="ลบ">ลบ</button>
       </div>
-    </div>`).join('') : '<div class="empty">ยังไม่มีรายชื่อ</div>'}
+      ${S.assignFor === String(r.id) ? assignPanel(r) : ''}
+    </div>`).join('') : '<div class="empty">ยังไม่มีรายชื่อในปีการศึกษานี้</div>'}
   </section>`;
 }
+function assignTags(rid){
+  const L = (S.assigns || []).filter(a => a.residentId === String(rid)); if (!L.length) return '';
+  const done = L.filter(a => a.status === 'ประเมินแล้ว').length, wait = L.length - done;
+  return (wait ? `<span class="tag d">รอประเมิน ${wait}</span>` : '') + (done ? `<span class="tag">ประเมินแล้ว ${done}</span>` : '');
+}
+function assignPanel(r){
+  const L = (S.assigns || []).filter(a => a.residentId === String(r.id));
+  const teachers = (S.staff || []);
+  return `<div style="flex-basis:100%;background:var(--paper2);border-radius:14px;padding:12px 14px;margin-top:8px">
+    <b>ส่งให้อาจารย์ประเมิน</b>
+    <div class="small muted">แอดมินกรอกช่วงวันที่ไว้ให้ อาจารย์จะได้ลิงก์ทาง LINE กดแล้วเข้าแบบประเมินของคนนี้ทันที</div>
+    <div class="row" style="align-items:flex-start">${dateField('aStart', 'ช่วงประเมิน เริ่ม', r.start)}${dateField('aEnd', 'ถึง', r.end)}</div>
+    <label class="f">เลือกอาจารย์</label>
+    ${S.staff === null ? '<p class="small muted">กำลังโหลดรายชื่อ…</p>' : teachers.length ? `<div id="aList" style="max-height:260px;overflow:auto;background:var(--paper);border-radius:12px;padding:4px 10px">
+      ${teachers.map(x => `<label class="row small" style="padding:7px 0;border-bottom:1px solid var(--rule)"><input type="checkbox" value="${esc(x.code)}">
+        <span class="grow">${esc(x.name)}</span>${x.lineLinked ? '<span class="tag">LINE ✓</span>' : '<span class="tag d">ไม่มี LINE</span>'}</label>`).join('')}
+    </div>` : '<p class="small muted">ยังไม่มีบุคลากร — เพิ่มที่เมนู บุคลากร</p>'}
+    <div class="row" style="margin-top:10px"><button class="btn pri" data-act="sendAssign">ส่งทาง LINE</button><button class="btn" data-act="closeAssign">ปิด</button></div>
+    ${L.length ? `<div style="margin-top:12px"><div class="small muted">ส่งไปแล้ว</div>${L.map(a => `
+      <div class="row small" style="padding:7px 0;border-bottom:1px solid var(--rule)">
+        <span class="grow"><b>${esc(a.staffName)}</b> · ${period(a)}<br><span class="muted">ส่ง ${thDateTime(a.sentAt)}${a.remindedAt ? ' · เตือนล่าสุด ' + thDateTime(a.remindedAt) : ''}${a.doneAt ? ' · ประเมิน ' + thDateTime(a.doneAt) : ''}</span></span>
+        ${a.status === 'ประเมินแล้ว' ? '<span class="tag">ประเมินแล้ว ✓</span>' : `<span class="tag d">รอประเมิน</span><button class="btn" data-remind="${esc(a.id)}">ส่งเตือน</button><button class="btn danger" data-uncancel="${esc(a.id)}">ยกเลิก</button>`}
+      </div>`).join('')}</div>` : ''}
+  </div>`;
+}
+async function loadAssigns(){ try { S.assigns = (await api('assignments')).assignments || []; } catch(e){ S.assigns = []; } }
+
 function readResForm(){
   return Object.assign({}, S.editing || {}, {
     name: document.getElementById('rName').value.trim(),
+    year: document.getElementById('rYear').value,
     service: document.querySelector('#rSvc .chip.on')?.dataset.svc || 'STROKE',
     start: document.getElementById('rStart').value, end: document.getElementById('rEnd').value,
     note: document.getElementById('rNote').value.trim(), active: document.getElementById('rActive').checked
   });
 }
+
+/* ─── แท็บ: บุคลากร (แอดมิน) ─── */
+function viewStaff(){
+  if (!S.staff) return '<div class="empty">กำลังโหลดรายชื่อบุคลากร…</div>';
+  const e = S.editStaff || { code:'', name:'', email:'', role:'ผู้ประเมิน', notify:false };
+  const admins = S.staff.filter(x => x.role === 'แอดมิน').length, linked = S.staff.filter(x => x.lineLinked).length;
+  return `
+  <section class="sheet"><h2>${e.origCode ? 'แก้ไขข้อมูลบุคลากร' : 'เพิ่มบุคลากร / แอดมิน'}</h2><div class="pad">
+    <div class="row" style="align-items:flex-start">
+      <div style="width:140px"><label class="f" for="sCode">รหัสบุคคล</label><input id="sCode" class="t" value="${esc(e.code)}" inputmode="numeric" placeholder="001830"></div>
+      <div class="grow" style="min-width:200px"><label class="f" for="sName">ชื่อ-นามสกุล</label><input id="sName" class="t" value="${esc(e.name)}" placeholder="ผศ.พญ. …"></div>
+    </div>
+    <label class="f" for="sEmail">อีเมล (ไม่บังคับ)</label>
+    <input id="sEmail" class="t" type="email" value="${esc(e.email)}">
+    <label class="f">สิทธิ์</label>
+    <div class="chips" id="sRole">
+      <button class="chip ${e.role === 'แอดมิน' ? 'on' : ''}" data-srole="แอดมิน">แอดมิน — ทำได้ทุกอย่าง</button>
+      <button class="chip ${e.role !== 'แอดมิน' ? 'on' : ''}" data-srole="ผู้ประเมิน">ผู้ประเมิน</button>
+    </div>
+    <label class="row small" style="margin-top:12px"><input type="checkbox" id="sNotify" ${e.notify ? 'checked' : ''}> รับแจ้งเตือนทาง LINE เมื่อมีการประเมินใหม่</label>
+    <div class="row" style="margin-top:14px"><button class="btn pri" data-act="saveStaff">${e.origCode ? 'บันทึกการแก้ไข' : 'เพิ่มบุคลากร'}</button>${e.origCode || e.name ? '<button class="btn" data-act="cancelStaff">ยกเลิก</button>' : ''}</div>
+  </div></section>
+
+  <section class="sheet"><h2>บุคลากรทั้งหมด <span>${S.staff.length} คน · แอดมิน ${admins} · เชื่อม LINE ${linked}</span></h2>
+  ${S.staff.length ? S.staff.map(x => `
+    <div class="res" style="cursor:default;flex-wrap:wrap">
+      <span class="av ${x.role === 'แอดมิน' ? 'STROKE' : 'GEN'}">${esc(initial(x.name))}</span>
+      <div class="grow" style="min-width:190px"><div class="nm">${esc(x.name)}</div>
+        <div class="meta"><span class="svc ${x.role === 'แอดมิน' ? 'STROKE' : 'GEN'}">${esc(x.role)}</span>รหัส ${esc(x.code)}
+          ${x.lineLinked ? '<span class="tag">LINE ✓</span>' : '<span class="tag d">ยังไม่เชื่อม LINE</span>'}
+          ${x.hasPin ? '<span class="tag">มีรหัสส่วนตัว</span>' : ''}${x.notify ? '' : '<span class="small muted">ไม่รับแจ้งเตือน</span>'}</div></div>
+      <div class="row" style="gap:4px">
+        <button class="btn" data-sedit="${esc(x.code)}">แก้ไข</button>
+        <button class="btn" data-spin="${esc(x.code)}">${x.hasPin ? 'เปลี่ยนรหัส' : 'ตั้งรหัส'}</button>
+        ${x.lineLinked ? `<button class="btn" data-sunlink="${esc(x.code)}">ยกเลิก LINE</button>` : ''}
+        <button class="btn danger" data-sdel="${esc(x.code)}">ลบ</button>
+      </div>
+      ${S.pinFor === x.code ? `<div style="flex-basis:100%;background:var(--paper2);border-radius:12px;padding:10px 12px;margin-top:6px">
+        <div class="small">ตั้งรหัสส่วนตัว 6 หลักให้ <b>${esc(x.name)}</b> — ใช้รหัสนี้เข้าแอปได้เลย ระบบจะรู้ชื่อและสิทธิ์อัตโนมัติ</div>
+        <div class="row" style="margin-top:8px"><input id="sPin" class="t" type="password" inputmode="numeric" maxlength="6" style="max-width:160px" placeholder="6 หลัก" autocomplete="new-password">
+        <button class="btn pri" data-act="saveStaffPin">บันทึกรหัส</button>${x.hasPin ? '<button class="btn danger" data-act="clearStaffPin">ลบรหัส</button>' : ''}<button class="btn" data-act="cancelPin">ปิด</button></div></div>` : ''}
+    </div>`).join('') : '<div class="empty">ยังไม่มีบุคลากร — เพิ่มด้านบน หรือวางรายชื่อในชีต Staff (คอลัมน์ รหัสบุคคล, ชื่อ-นามสกุล, อีเมล)</div>'}
+  </section>`;
+}
+async function reloadStaff(){ S.staff = (await api('staff')).staff || []; }
 
 /* ─── แท็บ: ตั้งค่า ─── */
 function viewSettings(){
@@ -674,6 +805,33 @@ function viewSettings(){
       <button class="btn" data-act="backup">สำรองข้อมูลตอนนี้</button>
     </div>
   </div></section>` : ''}
+  ${S.role === 'admin' ? `
+  <section class="sheet"><h2>แจ้งเตือน LINE OA</h2><div class="pad">
+    <dl class="kv"><dt>Token</dt><dd>${st && st.lineToken ? 'ใส่แล้ว ✓' : 'ยังไม่ได้ใส่'}</dd>
+    <dt>ผู้รับ</dt><dd>${st ? st.lineRecipients + ' ปลายทาง' : '-'} <span class="small muted">(บุคลากรที่เชื่อม LINE และเลือกรับ + กลุ่มด้านล่าง)</span></dd></dl>
+    <label class="f" for="lineTok">Channel access token (long-lived)</label>
+    <input id="lineTok" class="t" type="password" placeholder="${st && st.lineToken ? 'ใส่แล้ว — วางใหม่เพื่อเปลี่ยน' : 'วาง token จาก LINE Developers'}" autocomplete="off">
+    <label class="f" for="lineTo">ส่งเข้ากลุ่ม LINE เพิ่มเติม (ไม่บังคับ)</label>
+    <input id="lineTo" class="t" value="${esc(st ? st.lineTo : '')}" placeholder="groupId ขึ้นต้น C… คั่นหลายกลุ่มด้วย ,">
+    <div class="row" style="margin-top:10px"><button class="btn pri" data-act="saveLine">บันทึกการตั้งค่า LINE</button><button class="btn" data-act="testLine">ส่งข้อความทดสอบ</button></div>
+    <p class="small muted">บุคลากรเชื่อม LINE เอง: แอดเพื่อน LINE OA › พิมพ์รหัสบุคคล (เช่น 001830) › ระบบบันทึกในคอลัมน์ LINE ให้อัตโนมัติ</p>
+  </div></section>` : ''}
+  ${S.role === 'admin' || S.code ? `
+  <section class="sheet"><h2>เปลี่ยนรหัส 6 หลัก</h2><div class="pad">
+    <label class="f">รหัสที่จะเปลี่ยน</label>
+    <div class="chips" id="pinWhich">
+      ${S.code ? '<button class="chip on" data-pinw="self">รหัสส่วนตัวของฉัน</button>' : ''}
+      ${S.role === 'admin' ? `<button class="chip ${S.code ? '' : 'on'}" data-pinw="admin">รหัสผู้ดูแลหลัก</button><button class="chip" data-pinw="eval">รหัสผู้ประเมิน (ร่วม)</button>` : ''}
+    </div>
+    <label class="f" for="pinCur">รหัสปัจจุบันของคุณ (ยืนยันตัวตน)</label>
+    <input id="pinCur" class="t" type="password" inputmode="numeric" maxlength="6" autocomplete="current-password">
+    <div class="row" style="align-items:flex-start">
+      <div class="grow" style="min-width:140px"><label class="f" for="pinNew">รหัสใหม่ 6 หลัก</label><input id="pinNew" class="t" type="password" inputmode="numeric" maxlength="6" autocomplete="new-password"></div>
+      <div class="grow" style="min-width:140px"><label class="f" for="pinNew2">ใส่รหัสใหม่อีกครั้ง</label><input id="pinNew2" class="t" type="password" inputmode="numeric" maxlength="6" autocomplete="new-password"></div>
+    </div>
+    <p class="small muted">ตัวเลข 6 หลัก ห้ามเลขซ้ำทั้งหมด (111111) หรือเรียงกัน (123456) และต้องไม่ซ้ำกับรหัสของคนอื่น</p>
+    <button class="btn pri" data-act="changePin">เปลี่ยนรหัส</button>
+  </div></section>` : ''}
   <div class="row"><button class="btn danger" data-act="logout">ออกจากระบบ</button><span class="muted small">v${VERSION}</span></div>`;
 }
 
@@ -687,6 +845,8 @@ app.addEventListener('click', async ev => {
       S.tab = d.tab; render();
       if (d.tab === 'results'){ await loadEvals(); render(); }
       if (d.tab === 'settings' && S.role === 'admin'){ S.status = await api('status'); render(); }
+      if (d.tab === 'staff'){ S.staff = (await api('staff')).staff || []; render(); }
+      if (d.tab === 'residents'){ await loadAssigns(); render(); }
       return;
     }
     if (d.open){ S.current = S.residents.find(r => String(r.id) === d.open); S.sec = 0; render(); window.scrollTo(0, 0); keepScreen(); return; }
@@ -698,10 +858,34 @@ app.addEventListener('click', async ev => {
     }
     if (d.step !== undefined){ goStep(Number(d.step)); return; }
     if (d.role){ saveDraft(x => x.evaluatorRole = d.role); t.parentNode.querySelectorAll('.chip').forEach(c => c.classList.toggle('on', c === t)); return; }
+    if (d.yearf !== undefined){ S.yearFilter = d.yearf; LS.set('yearFilter', d.yearf); render(); return; }
+    if (d.pinw){ t.parentNode.querySelectorAll('.chip').forEach(c => c.classList.toggle('on', c === t)); return; }
+    if (d.yedit){ S.editYear = Object.assign({}, S.years.find(x => String(x.id) === d.yedit)); render(); return; }
+    if (d.ydel){
+      const y = S.years.find(x => String(x.id) === d.ydel), n = S.residents.filter(r => String(r.year) === d.ydel).length;
+      if (!confirm(`ลบปีการศึกษา ${y.name}?` + (n ? `\nรายชื่อ ${n} คนในปีนี้จะยังอยู่ แต่จะไม่ระบุปี` : ''))) return;
+      await api('deleteYear', { id:d.ydel }); if (String(S.yearFilter) === d.ydel){ S.yearFilter = null; LS.del('yearFilter'); }
+      await loadResidents(); render(); toast('ลบปีการศึกษาแล้ว'); return;
+    }
+    if (d.srole){ t.parentNode.querySelectorAll('.chip').forEach(c => c.classList.toggle('on', c === t)); if (!S.editStaff || !S.editStaff.origCode) document.getElementById('sNotify').checked = d.srole === 'แอดมิน'; return; }
+    if (d.sedit){ const x = S.staff.find(y => y.code === d.sedit); S.editStaff = Object.assign({ origCode:x.code }, x); S.pinFor = null; render(); window.scrollTo(0, 0); return; }
+    if (d.spin){ S.pinFor = S.pinFor === d.spin ? null : d.spin; render(); document.getElementById('sPin')?.focus(); return; }
+    if (d.sunlink){ const x = S.staff.find(y => y.code === d.sunlink); if (!confirm(`ยกเลิกการเชื่อม LINE ของ ${x.name}?\nเจ้าตัวพิมพ์รหัสบุคคลใน LINE OA เพื่อเชื่อมใหม่ได้`)) return;
+      await api('unlinkLine', { code:d.sunlink }); await reloadStaff(); render(); toast('ยกเลิกการเชื่อม LINE แล้ว'); return; }
+    if (d.sdel){ const x = S.staff.find(y => y.code === d.sdel); if (!confirm(`ลบ ${x.name} (${x.code}) ออกจากบุคลากร?\nรหัสส่วนตัวและการเชื่อม LINE จะถูกลบด้วย`)) return;
+      await api('deleteStaff', { code:d.sdel }); await reloadStaff(); render(); toast('ลบบุคลากรแล้ว'); return; }
+    if (d.task){ const t2 = S.tasks.find(x => x.id === d.task); if (t2) openTask(t2); return; }
+    if (d.assign){
+      S.assignFor = S.assignFor === d.assign ? null : d.assign; render();
+      if (S.assignFor){ const jobs = []; if (S.staff === null) jobs.push(api('staff').then(j => S.staff = j.staff || [])); if (S.assigns === null) jobs.push(loadAssigns()); if (jobs.length){ await Promise.all(jobs); render(); } }
+      document.getElementById('aStart')?.scrollIntoView({ block:'center' }); return;
+    }
+    if (d.remind){ t.disabled = true; const j = await api('remind', { id:d.remind, appUrl:appUrl() }); await loadAssigns(); render(); toast('ส่งเตือน ' + j.reminded + ' แล้ว'); return; }
+    if (d.uncancel){ if (!confirm('ยกเลิกงานประเมินนี้?')) return; await api('cancelAssign', { id:d.uncancel }); await loadAssigns(); render(); toast('ยกเลิกแล้ว'); return; }
     if (d.svc){ t.parentNode.querySelectorAll('.chip').forEach(c => c.classList.toggle('on', c === t)); return; }
     if (d.pick){ S.resFilter = d.pick; render(); window.scrollTo(0, 0); return; }
     if (d.edit){ S.editing = Object.assign({}, S.residents.find(r => String(r.id) === d.edit)); render(); window.scrollTo(0, 0); return; }
-    if (d.copy){ const r = S.residents.find(x => String(x.id) === d.copy); S.editing = { name:r.name, service:r.service, start:'', end:'', active:true, note:r.note || '' }; render(); window.scrollTo(0, 0); document.getElementById('rStart').focus(); return; }
+    if (d.copy){ const r = S.residents.find(x => String(x.id) === d.copy); S.editing = { name:r.name, service:r.service, start:'', end:'', active:true, note:r.note || '', year:r.year || '' }; render(); window.scrollTo(0, 0); document.getElementById('rStart').focus(); return; }
     if (d.delres){
       const r = S.residents.find(x => String(x.id) === d.delres);
       if (!confirm(`ลบ “${r.name}” (${r.service}) ออกจากรายชื่อ?\nผลประเมินที่ส่งแล้วจะยังอยู่`)) return;
@@ -736,6 +920,61 @@ app.addEventListener('click', async ev => {
         toast(r.id ? 'บันทึกการแก้ไขแล้ว' : 'เพิ่มรายชื่อแล้ว'); return;
       }
       case 'cancelRes': S.editing = null; render(); return;
+      case 'cancelYear': S.editYear = null; render(); return;
+      case 'cancelStaff': S.editStaff = null; render(); return;
+      case 'closeAssign': S.assignFor = null; render(); return;
+      case 'sendAssign': {
+        const codes = [...document.querySelectorAll('#aList input:checked')].map(x => x.value);
+        const start = document.getElementById('aStart').value, end = document.getElementById('aEnd').value;
+        if (!codes.length) return toast('กรุณาเลือกอาจารย์อย่างน้อย 1 ท่าน');
+        if (!start || !end || start > end) return toast('กรุณาใส่ช่วงวันที่ให้ถูกต้อง');
+        t.disabled = true; t.textContent = 'กำลังส่ง…';
+        const j = await api('assign', { residentId:S.assignFor, start, end, codes, appUrl:appUrl() }, { timeout:60000 });
+        await loadAssigns(); render();
+        toast([j.sent.length ? `ส่ง LINE แล้ว ${j.sent.length} ท่าน` : '', j.noLine.length ? `ไม่มี LINE ${j.noLine.length} ท่าน (${j.noLine.join(', ')}) — ท่านจะเห็นงานในแอปเมื่อเข้าด้วยรหัสส่วนตัว` : '', j.skipped.length ? `ส่งไปแล้วก่อนหน้า: ${j.skipped.join(', ')}` : ''].filter(Boolean).join(' · ') || 'ไม่มีรายการใหม่', 7000);
+        return;
+      }
+      case 'cancelPin': S.pinFor = null; render(); return;
+      case 'saveStaff': {
+        const x = { origCode: S.editStaff && S.editStaff.origCode || '', code: document.getElementById('sCode').value.trim(), name: document.getElementById('sName').value.trim(),
+          email: document.getElementById('sEmail').value.trim(), role: document.querySelector('#sRole .chip.on')?.dataset.srole || 'ผู้ประเมิน', notify: document.getElementById('sNotify').checked };
+        if (!x.code) return toast('กรุณาใส่รหัสบุคคล'); if (!x.name) return toast('กรุณาใส่ชื่อ-นามสกุล');
+        t.disabled = true; await api('saveStaff', { staff:x }); S.editStaff = null; await reloadStaff(); render();
+        toast(x.origCode ? 'บันทึกแล้ว' : `เพิ่ม ${x.name} แล้ว` + (x.role === 'แอดมิน' ? ' — กด “ตั้งรหัส” เพื่อให้เข้าแอปในฐานะแอดมิน' : ''), 5000); return;
+      }
+      case 'saveStaffPin': {
+        const v = document.getElementById('sPin').value;
+        if (!/^\d{6}$/.test(v)) return toast('รหัสต้องเป็นตัวเลข 6 หลัก');
+        t.disabled = true; await api('staffPin', { code:S.pinFor, pin:v }); const nm = S.staff.find(y => y.code === S.pinFor).name;
+        S.pinFor = null; await reloadStaff(); render(); toast(`ตั้งรหัสให้ ${nm} แล้ว — แจ้งรหัสให้เจ้าตัวทางช่องทางส่วนตัว`, 5000); return;
+      }
+      case 'clearStaffPin': if (!confirm('ลบรหัสส่วนตัวของคนนี้?')) return; await api('staffPin', { code:S.pinFor, pin:'' }); S.pinFor = null; await reloadStaff(); render(); toast('ลบรหัสแล้ว'); return;
+      case 'saveLine': {
+        const tok = document.getElementById('lineTok').value.trim(), to = document.getElementById('lineTo').value.trim();
+        t.disabled = true; await api('setLine', Object.assign({ to }, tok ? { token:tok } : {})); S.status = await api('status'); render(); toast('บันทึกการตั้งค่า LINE แล้ว'); return;
+      }
+      case 'saveYear': {
+        const y = Object.assign({}, S.editYear || {}, { name: document.getElementById('yName').value.trim(), start: document.getElementById('yStart').value, end: document.getElementById('yEnd').value });
+        if (!y.name) return toast('กรุณาใส่ชื่อปีการศึกษา เช่น 2569');
+        if (!y.start || !y.end || y.start > y.end) return toast('กรุณาเลือกวันเริ่มและวันสิ้นสุดให้ถูกต้อง');
+        t.disabled = true;
+        const j = await api('saveYear', { year:y }); S.editYear = null;
+        if (!y.id){ S.yearFilter = j.id; LS.set('yearFilter', j.id); }
+        await loadResidents(); render(); toast(y.id ? 'บันทึกปีการศึกษาแล้ว' : `เพิ่มปีการศึกษา ${y.name} แล้ว`); return;
+      }
+      case 'changePin': {
+        const which = document.querySelector('#pinWhich .chip.on')?.dataset.pinw || (S.code ? 'self' : 'admin');
+        const cur = document.getElementById('pinCur').value, n1 = document.getElementById('pinNew').value, n2 = document.getElementById('pinNew2').value;
+        if (!/^\d{6}$/.test(cur)) return toast('ใส่รหัสปัจจุบันของคุณ 6 หลัก');
+        if (!/^\d{6}$/.test(n1)) return toast('รหัสใหม่ต้องเป็นตัวเลข 6 หลัก');
+        if (n1 !== n2) return toast('รหัสใหม่ทั้งสองช่องไม่ตรงกัน');
+        if (!confirm(`ยืนยันเปลี่ยน${which === 'eval' ? 'รหัสผู้ประเมิน (ร่วม)' : which === 'self' ? 'รหัสส่วนตัวของคุณ' : 'รหัสผู้ดูแลหลัก'}?`)) return;
+        t.disabled = true;
+        await api('changePin', { which, current:cur, newPin:n1 });
+        ['pinCur','pinNew','pinNew2'].forEach(id => document.getElementById(id).value = '');
+        t.disabled = false;
+        toast(which === 'eval' ? 'เปลี่ยนรหัสผู้ประเมินแล้ว — อย่าลืมแจ้งรหัสใหม่' : 'เปลี่ยนรหัสแล้ว ครั้งหน้าใช้รหัสใหม่', 5000); return;
+      }
       case 'testLine': { const j = await api('testLine'); toast(j.sent ? `ส่งข้อความทดสอบแล้ว (${j.sent} ปลายทาง)` : 'ส่งไม่สำเร็จ: ' + (j.reason || (j.errors || []).join(' ')), 6000); return; }
       case 'backup': { t.disabled = true; t.textContent = 'กำลังสำรอง…'; const j = await api('backupNow', {}, { timeout:90000, retries:0 }); toast('สำรองข้อมูลแล้ว: ' + j.backup); S.status = await api('status'); render(); return; }
       case 'logout': if (confirm('ออกจากระบบ?')) logout(); return;
@@ -744,12 +983,23 @@ app.addEventListener('click', async ev => {
 });
 app.addEventListener('input', ev => {
   const t = ev.target;
+  if (t.type === 'date'){ const b = document.getElementById(t.id + '_be'); if (b) b.textContent = t.value ? '= ' + thDate(t.value) : '';
+    if (t.id === 'yStart' && t.value && !document.getElementById('yName').value) document.getElementById('yName').value = String(Number(t.value.slice(0, 4)) - (Number(t.value.slice(5, 7)) < 7 ? 1 : 0) + 543); }
+  if (t.id === 'yName' && /^25\d\d$/.test(t.value.trim())){ // พิมพ์ปี พ.ศ. → เติม 1 ก.ค. – 30 ก.ย. ปีถัดไป ให้อัตโนมัติ
+    const ce = Number(t.value.trim()) - 543;
+    [['yStart', ce + '-07-01'], ['yEnd', (ce + 1) + '-09-30']].forEach(([id, v]) => { const el = document.getElementById(id); el.value = v; document.getElementById(id + '_be').textContent = '= ' + thDate(v); });
+  }
+  if (/^pin/.test(t.id) || t.id === 'sPin') t.value = t.value.replace(/\D/g, '').slice(0, 6);
   if (t.id === 'search'){ S.filter = t.value; document.getElementById('reslist').innerHTML = listItems(); }
   if (t.dataset.d && S.current) saveDraft(x => x[t.dataset.d] = t.value);
 });
 app.addEventListener('change', ev => {
   if (ev.target.id === 'resFilter'){ S.resFilter = ev.target.value; render(); }
   if (ev.target.id === 'wakeChk'){ LS.set('wake', ev.target.checked); }
+  if (ev.target.id === 'rYear'){
+    const y = S.years.find(x => String(x.id) === ev.target.value);
+    if (y){ [['rStart', y.start], ['rEnd', y.end]].forEach(([id, v]) => { const el = document.getElementById(id); el.value = v; document.getElementById(id + '_be').textContent = '= ' + thDate(v); }); }
+  }
 });
 document.addEventListener('keydown', e => {
   if (S.token || document.activeElement?.tagName === 'INPUT') return;
@@ -760,10 +1010,9 @@ document.addEventListener('keydown', e => {
 (async function start(){
   if (!S.token) { renderLogin(); heartbeat(true); return; }
   app.innerHTML = '<div class="empty" style="padding-top:40vh">กำลังเชื่อมต่อ…</div>';
-  try { await loadResidents(); render(); flushQueue(); }
+  try { await loadResidents(); render(); flushQueue(); openPendingTask(); }
   catch(e){ if (S.token) { render(); toast(e.message, 5000); } }
 })();
 </script>
 </body>
 </html>
-
