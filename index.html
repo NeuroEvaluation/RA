@@ -117,6 +117,7 @@ img.av{object-fit:cover;background:var(--paper2)}
 .res .meta{font-size:13px;color:var(--muted);display:flex;gap:6px;align-items:center;flex-wrap:wrap;margin-top:2px}
 .res .go{width:34px;height:34px;border-radius:50%;background:var(--pen-soft);color:var(--pen);display:grid;place-items:center;font-size:18px;flex:none}
 .tag{font-size:11px;padding:1px 8px;border-radius:999px;background:var(--good-bg);color:var(--good);font-weight:600}
+.res.locked{opacity:.55;cursor:not-allowed}
 .tag.d{background:var(--mid-bg);color:var(--mid)}
 
 /* ── แบบประเมิน ── */
@@ -206,7 +207,7 @@ header.top .logo{width:36px;height:36px;position:relative}
 const INLINE_API = 'https://script.google.com/macros/s/XXXX/exec';
 const okUrl = u => typeof u === 'string' && /^https:\/\/script\.google(usercontent)?\.com\/.+\/exec$/.test(u) && !u.includes('XXXX');
 const DEFAULT_API = okUrl(window.RA_API) ? window.RA_API : INLINE_API;
-const VERSION = '1.9.1';
+const VERSION = '1.10.0';
 
 /* ═══════════ แบบประเมิน (ตามแบบฟอร์มกระดาษ) ═══════════ */
 const SECTIONS = [
@@ -248,7 +249,7 @@ const LS = {
 
 const S = {
   api: okUrl(DEFAULT_API) ? DEFAULT_API : LS.get('api', DEFAULT_API), token: LS.get('token', null), role: LS.get('role', null),
-  tab: 'eval', sec: 0, tasks: [], assigns: null, assignFor: null, name: LS.get('name', ''), code: LS.get('code', ''), staff: null, editStaff: null, pinFor: null, years: [], yearFilter: LS.get('yearFilter', null), editYear: null, residents: [], evals: null, status: null, current: null,
+  tab: 'eval', sec: 0, mode: 'assigned', tasks: [], assigns: null, assignFor: null, name: LS.get('name', ''), code: LS.get('code', ''), staff: null, editStaff: null, pinFor: null, years: [], yearFilter: LS.get('yearFilter', null), editYear: null, residents: [], evals: null, status: null, current: null,
   filter: '', resFilter: '', editing: null, net: 'wait', lastPing: 0, pin: '', busy: false
 };
 const app = document.getElementById('app');
@@ -437,7 +438,8 @@ function shrinkImage(file){
 function applyBoot(j){
   if (j.residents) S.residents = j.residents; if (j.years) S.years = j.years; if (j.tasks) S.tasks = j.tasks; if (j.assigns) S.assigns = j.assigns;
   if (j.role){ S.role = j.role; LS.set('role', j.role); }
-  LS.set('boot', { residents:S.residents, years:S.years, tasks:S.tasks });
+  if (j.mode) S.mode = j.mode;
+  LS.set('boot', { residents:S.residents, years:S.years, tasks:S.tasks, mode:S.mode });
 }
 async function loadResidents(){ applyBoot(await api('boot')); syncPhotos(); }
 
@@ -514,6 +516,7 @@ function viewList(){
     <button class="btn" data-act="reload">รีเฟรช</button>
   </div>
   ${S.role === 'admin' ? tracker() : ''}
+  ${S.role !== 'admin' && S.mode !== 'open' && !S.tasks.length ? `<div class="banner" style="background:var(--pen-soft);color:var(--pen)">ประเมินได้เฉพาะแพทย์ที่ได้รับมอบหมาย — กดลิงก์ในอีเมลหรือ LINE ที่ได้รับเพื่อเข้าแบบประเมิน</div>` : ''}
   ${S.tasks.length ? `<section class="sheet" style="border:2px solid var(--pen)"><h2>งานที่ได้รับมอบหมาย <span>${S.tasks.length} รายการรอประเมิน</span></h2>
     ${S.tasks.map(t => `<button class="res" data-task="${esc(t.id)}">${avatar(t.residentId, t.residentName, t.service)}
       <div class="grow"><div class="nm">${esc(t.residentName)}</div><div class="meta"><span class="svc ${esc(t.service)}">${esc(t.service)}</span>${period(t)}</div>
@@ -551,17 +554,20 @@ function tracker(){
     <div class="small muted" style="padding:0 16px 12px">ระบบเตือนอาจารย์ให้อัตโนมัติ (วันเริ่ม · ครบกำหนด · +7 วัน) และส่งสรุปให้แอดมินทุกเช้าที่มีความเคลื่อนไหว</div>
   </section>`;
 }
+// สิทธิ์ประเมิน: แอดมินประเมินได้ทุกคน · โหมด "เฉพาะงานที่มอบหมาย" ผู้ร่วมประเมินประเมินได้เฉพาะคนที่ได้รับงาน
+const taskFor = rid => (S.tasks || []).find(t => t.residentId === String(rid));
+const canEval = r => S.role === 'admin' || S.mode === 'open' || !!taskFor(r.id);
 function listItems(){
   const f = S.filter.trim().toLowerCase(), t = today();
   const list = S.residents.filter(r => r.active && inYear(r) && (!f || String(r.name).toLowerCase().includes(f)));
   if (!list.length) return `<div class="empty">${S.residents.length ? (f ? 'ไม่พบชื่อที่ค้นหา' : 'ไม่มีรายชื่อในปีการศึกษานี้ — กด “ทุกปี” เพื่อดูทั้งหมด') : (S.role === 'admin' ? 'ยังไม่มีรายชื่อ — เพิ่มที่เมนู “รายชื่อ”' : 'ยังไม่มีรายชื่อแพทย์ที่เปิดให้ประเมิน')}</div>`;
   return list.map(r => {
-    const now = r.start <= t && t <= r.end, draft = LS.get('draft_' + r.id, null);
-    return `<button class="res" data-open="${esc(r.id)}">
+    const now = r.start <= t && t <= r.end, draft = LS.get('draft_' + r.id, null), ok = canEval(r);
+    return `<button class="res${ok ? '' : ' locked'}" data-open="${esc(r.id)}" ${ok ? '' : 'aria-disabled="true"'}>
       ${avatar(r.id, r.name, r.service)}
       <div class="grow"><div class="nm">${esc(r.name)}</div>
-      <div class="meta"><span class="svc ${esc(r.service)}">${esc(r.service)}</span>${period(r)}${now ? '<span class="tag">ช่วงปัจจุบัน</span>' : ''}${draft ? '<span class="tag d">มีร่าง</span>' : ''}</div></div>
-      <span class="go" aria-hidden="true">›</span></button>`;
+      <div class="meta"><span class="svc ${esc(r.service)}">${esc(r.service)}</span>${period(r)}${now ? '<span class="tag">ช่วงปัจจุบัน</span>' : ''}${draft && ok ? '<span class="tag d">มีร่าง</span>' : ''}${ok ? '' : '<span class="small muted">🔒 ไม่ได้รับมอบหมาย</span>'}</div></div>
+      <span class="go" aria-hidden="true">${ok ? '›' : '🔒'}</span></button>`;
   }).join('');
 }
 const initial = n => (String(n).replace(/^(นพ\.|พญ\.|นาย|นางสาว|นาง|ดร\.)\s*/, '').trim()[0] || '?');
@@ -926,6 +932,15 @@ function viewSettings(){
     </div>
   </div></section>` : ''}
   ${S.role === 'admin' ? `
+  <section class="sheet"><h2>สิทธิ์การประเมิน</h2><div class="pad">
+    <div class="chips" id="modeChips">
+      <button class="chip ${S.mode !== 'open' ? 'on' : ''}" data-mode="assigned">🔒 เฉพาะงานที่มอบหมาย (แนะนำ)</button>
+      <button class="chip ${S.mode === 'open' ? 'on' : ''}" data-mode="open">เปิด — ประเมินได้ทุกคน</button>
+    </div>
+    <p class="small muted" style="margin-top:8px">${S.mode !== 'open'
+      ? 'ผู้ร่วมประเมินเห็นรายชื่อทั้งหมด แต่ประเมินได้เฉพาะแพทย์ที่แอดมินกด “ส่งให้อาจารย์” และยังไม่ได้ประเมิน · คนอื่นจะขึ้น 🔒 · แอดมินประเมินได้ทุกคน'
+      : 'ทุกคนที่มีรหัสประเมินแพทย์คนไหนก็ได้ ไม่ต้องรองานมอบหมาย'}</p>
+  </div></section>
   <section class="sheet"><h2>แจ้งอาจารย์ทางอีเมล / เตือนอัตโนมัติ</h2><div class="pad">
     <dl class="kv"><dt>เตือนอัตโนมัติ</dt><dd>${st ? (st.remindOn ? 'เปิด ✓ ทุกวัน ' + st.remindHour + ':00 น.' : 'ปิดอยู่') : '-'}</dd>
     <dt>กำหนดการ</dt><dd>เชิญวันเริ่ม · เตือนวันครบกำหนด · เตือนครั้งสุดท้ายหลังครบกำหนด ${st ? st.finalDays : 7} วัน</dd>
@@ -979,7 +994,11 @@ app.addEventListener('click', async ev => {
       if (d.tab === 'residents'){ await loadAssigns(); render(); }
       return;
     }
-    if (d.open){ S.current = S.residents.find(r => String(r.id) === d.open); S.sec = 0; render(); window.scrollTo(0, 0); keepScreen(); return; }
+    if (d.open){
+      const r = S.residents.find(x => String(x.id) === d.open); if (!r) return;
+      if (!canEval(r)) return toast(S.code ? 'ประเมินได้เฉพาะแพทย์ที่แอดมินมอบหมายให้ในช่วงนี้ — ดูกล่อง “งานที่ได้รับมอบหมาย” หรือกดลิงก์ในอีเมล' : 'กรุณากดลิงก์ในอีเมล/LINE ที่ได้รับ เพื่อเข้าแบบประเมินของแพทย์ที่ได้รับมอบหมาย', 6000);
+      const tk = S.role !== 'admin' && taskFor(r.id); if (tk) return openTask(tk, r);
+      S.current = r; S.sec = 0; render(); window.scrollTo(0, 0); keepScreen(); return; }
     if (d.score){
       const item = t.closest('.item'), k = item.dataset.item, cur = draftOf(S.current.id).scores[k];
       const val = d.score === 'NA' ? (cur === 'NA' ? undefined : 'NA') : Number(d.score);
@@ -1016,6 +1035,7 @@ app.addEventListener('click', async ev => {
     if (d.photo){ S.photoFor = d.photo; const f = document.getElementById('photoIn'); f.value = ''; f.click(); return; }
     if (d.delphoto){ if (!confirm('ลบรูปของแพทย์คนนี้?')) return; await api('setPhoto', { residentId:d.delphoto, data:'' }); delete S.photos[d.delphoto]; LS.set('photos', S.photos);
       const r = S.residents.find(x => String(x.id) === d.delphoto); if (r) r.photoV = ''; render(); toast('ลบรูปแล้ว'); return; }
+    if (d.mode){ if (d.mode === S.mode) return; t.disabled = true; const j = await api('setMode', { mode:d.mode }); S.mode = j.mode; render(); toast(S.mode === 'open' ? 'เปิดให้ประเมินได้ทุกคนแล้ว' : 'ตั้งเป็นประเมินได้เฉพาะงานที่มอบหมายแล้ว'); return; }
     if (d.svc){ t.parentNode.querySelectorAll('.chip').forEach(c => c.classList.toggle('on', c === t)); return; }
     if (d.pick){ S.resFilter = d.pick; render(); window.scrollTo(0, 0); return; }
     if (d.edit){ S.editing = Object.assign({}, S.residents.find(r => String(r.id) === d.edit)); render(); window.scrollTo(0, 0); return; }
@@ -1158,7 +1178,7 @@ document.addEventListener('keydown', e => {
   if (!S.token) { renderLogin(); heartbeat(true); return; }
   // เปิดทันทีจากข้อมูลที่จำไว้ แล้วค่อยอัปเดตจากเซิร์ฟเวอร์เบื้องหลัง
   const cached = LS.get('boot', null);
-  if (cached){ S.residents = cached.residents || []; S.years = cached.years || []; S.tasks = cached.tasks || []; render(); }
+  if (cached){ S.residents = cached.residents || []; S.years = cached.years || []; S.tasks = cached.tasks || []; S.mode = cached.mode || 'assigned'; render(); }
   else app.innerHTML = '<div class="empty" style="padding-top:40vh">กำลังเชื่อมต่อ…</div>';
   if (START_TAB === 'results'){ S.tab = 'results'; render(); }
   try { await loadResidents(); S.lastPing = Date.now(); if (!S.current) render(); flushQueue(); openPendingTask().then(goStartTab); }
